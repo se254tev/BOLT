@@ -2,12 +2,12 @@ FROM node:20-slim
 
 WORKDIR /app
 
+ENV NODE_ENV=production
+
 COPY package*.json ./
-RUN npm install --production
+RUN npm ci --omit=dev
 
 COPY . .
 
 EXPOSE 4000
-
-ENV NODE_ENV=production
 CMD ["node", "server.js"]
