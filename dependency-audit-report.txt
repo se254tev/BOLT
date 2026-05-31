@@ -1,0 +1,25 @@
+=== DEPENDENCY AUDIT ===
+Checked at: 2026-05-31T21:22:03.094Z
+
+Package.json: C:\Users\SHARON Otunga\Desktop\Project\Bolt 1.1\admin-dashboard\package.json
+  MISSING: none
+  RUNTIME in devDependencies: none
+  UNUSED (candidates):
+    - autoprefixer
+    - postcss
+    - tailwindcss
+    - @tailwindcss/forms
+    - vite
+    - @vitejs/plugin-react
+
+Package.json: C:\Users\SHARON Otunga\Desktop\Project\Bolt 1.1\backend\package.json
+  MISSING: none
+  RUNTIME in devDependencies: none
+  UNUSED (candidates):
+    - express-async-errors
+    - cross-env
+    - jest
+    - nodemon
+    - supertest
+
+No missing packages detected.
