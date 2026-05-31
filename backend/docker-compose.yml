@@ -1,0 +1,40 @@
+version: '3.9'
+services:
+  bolt-api:
+    build: .
+    ports:
+      - '4000:4000'
+    environment:
+      - NODE_ENV=production
+      - PORT=4000
+      - MONGODB_URI=mongodb://mongo:27017/bolt
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=change-me
+      - CLOUDINARY_CLOUD_NAME=your-cloud-name
+      - CLOUDINARY_API_KEY=your-api-key
+      - CLOUDINARY_API_SECRET=your-api-secret
+    depends_on:
+      - mongo
+      - redis
+    networks:
+      - bolt-net
+  mongo:
+    image: mongo:6.0
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: bolt
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - bolt-net
+  redis:
+    image: redis:7.0-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--save", "60", "1", "--appendonly", "yes"]
+    networks:
+      - bolt-net
+volumes:
+  mongo-data:
+networks:
+  bolt-net:
+    driver: bridge
