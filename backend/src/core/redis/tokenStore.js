@@ -1,4 +1,4 @@
-const redisClient = require('./redisClient');
+const redisClient = require('../../config/redis');
 const { hashToken, compareToken } = require('../../services/tokenUtils');
 
 const accessTokenBlacklistKey = (jti) => `blacklist:access:${jti}`;

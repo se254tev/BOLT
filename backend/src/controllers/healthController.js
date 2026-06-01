@@ -1,4 +1,4 @@
-const redisClient = require('../core/redis/redisClient');
+const redisClient = require('../config/redis');
 
 const health = async (req, res) => {
   const redisOk = redisClient ? await redisClient.ping().then(() => true).catch(() => false) : false;

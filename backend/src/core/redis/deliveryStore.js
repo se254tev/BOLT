@@ -1,4 +1,4 @@
-const redisClient = require('./redisClient');
+const redisClient = require('../../config/redis');
 
 const locationKey = (agentId) => `delivery:location:${agentId}`;
 const statusKey = (agentId) => `delivery:agent:status:${agentId}`;

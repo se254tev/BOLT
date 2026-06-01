@@ -1,4 +1,4 @@
-const redisClient = require('../core/redis/redisClient');
+const redisClient = require('../config/redis');
 
 const tierLimits = {
   guest: { window: 60, limit: 30 },
