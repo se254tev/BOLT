@@ -6,8 +6,12 @@ dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 const isProduction = process.env.NODE_ENV === 'production';
 
 const allowedOrigins = isProduction
-  ? ['https://boltmarket.com', 'https://admin.boltmarket.com']
-  : ['http://localhost:3000', 'http://127.0.0.1:3000'];
+  ? [
+      'https://boltmarket.com',
+      'https://admin.boltmarket.com',
+      'https://bolt-nu-ecru.vercel.app',
+    ]
+  : ['http://localhost:3000', 'http://127.0.0.1:3000', 'https://bolt-nu-ecru.vercel.app'];
 
 module.exports = {
   port: Number(process.env.PORT) || 4000,

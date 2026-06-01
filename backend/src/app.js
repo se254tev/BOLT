@@ -1,7 +1,7 @@
 const express = require('express');
 const helmet = require('helmet');
 const compression = require('compression');
-const cors = require('cors');
+const { corsMiddleware, corsOptions } = require('./middleware/cors');
 const cookieParser = require('cookie-parser');
 const config = require('./config');
 const logger = require('./services/logger');
@@ -16,10 +16,28 @@ const metricsMiddleware = require('./middleware/metrics');
 const apiGateway = require('../gateway/api-gateway');
 const metricsRoutes = require('./routes/metrics');
 
+
 const app = express();
 app.use(requestId);
 app.use(requestLogger);
 app.use(responseFormatter);
+
+// parse JSON/urlencoded early
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(cookieParser());
+
+// Debug logging for CORS/preflight troubleshooting (temporary)
+app.use((req, res, next) => {
+  console.log('ORIGIN:', req.headers.origin);
+  console.log('METHOD:', req.method, req.path);
+  next();
+});
+
+// CORS must run before any authentication/redirect middleware
+app.use(corsMiddleware);
+app.options('*', corsOptions ? require('cors')(corsOptions) : (req, res) => res.sendStatus(204));
+
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -36,36 +54,17 @@ app.use(
   }),
 );
 app.use(compression());
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-app.use(cookieParser());
 app.use(sanitizeMiddleware);
 app.use(metricsMiddleware);
+
+// Do NOT redirect OPTIONS preflight requests; only redirect non-OPTIONS http traffic
 app.use((req, res, next) => {
-  if (req.protocol === 'http' && config.nodeEnv === 'production') {
+  if (req.method !== 'OPTIONS' && req.protocol === 'http' && config.nodeEnv === 'production') {
     return res.redirect(301, `https://${req.headers.host}${req.url}`);
   }
   next();
 });
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (config.isProduction && !origin) {
-        return callback(new Error('CORS origin missing')); 
-      }
-      if (config.allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-      if (!config.isProduction && !origin) {
-        return callback(null, true);
-      }
-      return callback(new Error('CORS policy violation'));
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'x-request-id'],
-  }),
-);
+
 app.use(generalLimiter);
 
 app.use('/api', apiGateway);

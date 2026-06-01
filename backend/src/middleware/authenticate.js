@@ -5,6 +5,11 @@ const logger = require('../services/logger');
 const { isAccessTokenRevoked } = require('../core/redis/tokenStore');
 
 const authenticate = async (req, res, next) => {
+  if (req.method === 'OPTIONS') return next();
+  // Allow admin auth endpoints and preflight through without authentication
+  if (req.originalUrl && (req.originalUrl.startsWith('/api/admin/auth/login') || req.originalUrl.startsWith('/api/admin/auth/register'))) {
+    return next();
+  }
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     logger.warn('Authentication failed: missing authorization header', {
