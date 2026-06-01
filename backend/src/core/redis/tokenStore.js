@@ -5,12 +5,17 @@ const accessTokenBlacklistKey = (jti) => `blacklist:access:${jti}`;
 const refreshTokenKey = (jti) => `refresh_token:${jti}`;
 
 const storeRefreshToken = async (userId, refreshToken, jti, ttlSeconds) => {
+  if (!redisClient) {
+    console.warn('Redis not configured — storeRefreshToken is a no-op');
+    return;
+  }
   const hashed = await hashToken(refreshToken);
   const payload = JSON.stringify({ userId, hash: hashed });
   await redisClient.set(refreshTokenKey(jti), payload, 'EX', ttlSeconds);
 };
 
 const validateRefreshToken = async (userId, jti, refreshToken) => {
+  if (!redisClient) return false;
   const raw = await redisClient.get(refreshTokenKey(jti));
   if (!raw) {
     return false;
@@ -28,6 +33,10 @@ const validateRefreshToken = async (userId, jti, refreshToken) => {
 };
 
 const rotateRefreshToken = async (oldJti, newJti, userId, refreshToken, ttlSeconds) => {
+  if (!redisClient) {
+    console.warn('Redis not configured — rotateRefreshToken is a no-op');
+    return;
+  }
   const hashed = await hashToken(refreshToken);
   const payload = JSON.stringify({ userId, hash: hashed });
   const pipeline = redisClient.multi();
@@ -37,10 +46,12 @@ const rotateRefreshToken = async (oldJti, newJti, userId, refreshToken, ttlSecon
 };
 
 const revokeRefreshToken = async (jti) => {
+  if (!redisClient) return;
   await redisClient.del(refreshTokenKey(jti));
 };
 
 const revokeAccessToken = async (jti, expiresAtSeconds) => {
+  if (!redisClient) return;
   const ttl = Math.max(expiresAtSeconds - Math.floor(Date.now() / 1000), 0);
   if (ttl > 0) {
     await redisClient.set(accessTokenBlacklistKey(jti), 'revoked', 'EX', ttl);
@@ -51,6 +62,7 @@ const isAccessTokenRevoked = async (jti) => {
   if (!jti) {
     return false;
   }
+  if (!redisClient) return false;
   return Boolean(await redisClient.exists(accessTokenBlacklistKey(jti)));
 };
 

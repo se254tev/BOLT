@@ -3,24 +3,31 @@ const RedisStore = require('rate-limit-redis');
 const redisClient = require('../core/redis/redisClient');
 const logger = require('../services/logger');
 
-const createLimiter = ({ windowMs, max, message, code }) => rateLimit({
-  store: new RedisStore({ sendCommand: (...args) => redisClient.call(...args) }),
-  windowMs,
-  max,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message,
-  handler: (req, res) => {
-    logger.warn('Rate limit exceeded', {
-      ip: req.ip,
-      path: req.originalUrl,
-      windowMs,
-      max,
-      requestId: req.requestId,
-    });
-    res.status(429).json({ success: false, message: 'Too many requests. Please try again later.', code: code || 'rate_limit_exceeded' });
-  },
-});
+const createLimiter = ({ windowMs, max, message, code }) => {
+  const options = {
+    windowMs,
+    max,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message,
+    handler: (req, res) => {
+      logger.warn('Rate limit exceeded', {
+        ip: req.ip,
+        path: req.originalUrl,
+        windowMs,
+        max,
+        requestId: req.requestId,
+      });
+      res.status(429).json({ success: false, message: 'Too many requests. Please try again later.', code: code || 'rate_limit_exceeded' });
+    },
+  };
+
+  if (redisClient) {
+    options.store = new RedisStore({ sendCommand: (...args) => redisClient.call(...args) });
+  }
+
+  return rateLimit(options);
+};
 
 const authLimiter = createLimiter({
   windowMs: 15 * 60 * 1000,

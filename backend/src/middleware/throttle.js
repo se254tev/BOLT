@@ -8,6 +8,7 @@ const tierLimits = {
 };
 
 const throttle = async (req, res, next) => {
+  if (!redisClient) return next();
   const tier = req.user?.role || 'guest';
   const key = `throttle:${tier}:${req.ip}`;
   const { window, limit } = tierLimits[tier] || tierLimits.guest;

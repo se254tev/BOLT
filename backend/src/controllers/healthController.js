@@ -1,7 +1,7 @@
 const redisClient = require('../core/redis/redisClient');
 
 const health = async (req, res) => {
-  const redisOk = await redisClient.ping().then(() => true).catch(() => false);
+  const redisOk = redisClient ? await redisClient.ping().then(() => true).catch(() => false) : false;
   res.status(200).json({
     status: 'ok',
     uptime: process.uptime(),
@@ -12,7 +12,7 @@ const health = async (req, res) => {
 
 const ready = async (req, res) => {
   const mongoConnected = req.app.locals.mongoConnected;
-  const redisOk = await redisClient.ping().then(() => true).catch(() => false);
+  const redisOk = redisClient ? await redisClient.ping().then(() => true).catch(() => false) : false;
   res.status(mongoConnected && redisOk ? 200 : 503).json({
     ready: mongoConnected && redisOk,
     mongoConnected,
@@ -21,4 +21,11 @@ const ready = async (req, res) => {
   });
 };
 
-module.exports = { health, ready };
+const redisStatus = async (req, res) => {
+  if (!redisClient) return res.status(200).json({ status: 'degraded', redis: 'unavailable' });
+  const ok = await redisClient.ping().then(() => true).catch(() => false);
+  if (ok) return res.status(200).json({ status: 'ok', redis: 'connected' });
+  return res.status(503).json({ status: 'degraded', redis: 'unavailable' });
+};
+
+module.exports = { health, ready, redisStatus };

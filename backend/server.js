@@ -5,6 +5,9 @@ const mongoose = require('mongoose');
 const app = require('./src/app');
 const config = require('./src/config');
 
+// Startup diagnostics for Redis configuration
+console.log('REDIS_URL:', process.env.REDIS_URL ? '[CONFIGURED]' : '[MISSING]');
+
 const PORT = config.port;
 
 mongoose.connect(config.mongoUri, {
