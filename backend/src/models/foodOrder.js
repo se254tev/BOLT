@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { PAYMENT_STATUS_VALUES } = require('../utils/paymentConstants');
 
 const foodOrderSchema = new mongoose.Schema({
   buyerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
@@ -36,7 +37,19 @@ const foodOrderSchema = new mongoose.Schema({
     ],
     default: 'created',
   },
-  orderPaymentStatus: { type: String, enum: ['pending', 'paid', 'failed'], default: 'pending' },
+  payment: {
+    method: { type: String },
+    amount: { type: Number },
+    transactionCode: { type: String },
+    mpesaMessage: { type: String },
+    screenshotUrl: { type: String },
+    submittedAt: { type: Date },
+    approvedAt: { type: Date },
+    approvedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    approvedPaymentReference: { type: String },
+    rejectionReason: { type: String },
+  },
+  paymentStatus: { type: String, enum: PAYMENT_STATUS_VALUES, default: 'PENDING' },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });

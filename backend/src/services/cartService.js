@@ -1,7 +1,7 @@
 const Cart = require('../models/cart');
 const AuditLog = require('../models/auditLog');
 
-const getCartForUser = async (userId) => Cart.find({ userId }).populate('items.productId').lean();
+const getCartForUser = async (userId) => Cart.findOne({ userId }).populate('items.productId').lean();
 
 const calculateTotal = (items, totalOverride) => {
   if (typeof totalOverride === 'number') return totalOverride;

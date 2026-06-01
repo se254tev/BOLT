@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { PAYMENT_STATUS_VALUES } = require('../utils/paymentConstants');
 
 const deliveryOrderSchema = new mongoose.Schema({
   buyerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
@@ -23,6 +24,23 @@ const deliveryOrderSchema = new mongoose.Schema({
   },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
+});
+
+// Payment fields for manual payment verification
+deliveryOrderSchema.add({
+  payment: {
+    method: { type: String },
+    amount: { type: Number },
+    transactionCode: { type: String },
+    mpesaMessage: { type: String },
+    screenshotUrl: { type: String },
+    submittedAt: { type: Date },
+    approvedAt: { type: Date },
+    approvedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    approvedPaymentReference: { type: String },
+    rejectionReason: { type: String },
+  },
+  paymentStatus: { type: String, enum: PAYMENT_STATUS_VALUES, default: 'PENDING' },
 });
 
 deliveryOrderSchema.pre('save', function (next) {

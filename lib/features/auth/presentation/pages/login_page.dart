@@ -4,6 +4,10 @@ import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/utils/validators.dart';
 import '../../auth/presentation/controllers/auth_controller.dart';
+import '../../../../shared/widgets/card_widget.dart';
+import '../../../../shared/widgets/input_widget.dart';
+import '../../../../shared/widgets/button_widget.dart';
+import '../../../../shared/widgets/loading_widget.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -17,46 +21,63 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  void _onLoginPressed() {
-    if (!_formKey.currentState!.validate()) return;
-    ref.read(authControllerProvider.notifier).login(
-          _emailController.text.trim(),
-          _passwordController.text,
-        );
-  }
+  late bool _isSubmitting;
 
   @override
-  Widget build(BuildContext context) {
-    final authState = ref.watch(authControllerProvider);
-    return Scaffold(
-      appBar: AppBar(title: const Text(AppStrings.loginTitle)),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(labelText: AppStrings.email),
-                validator: (value) => value == null || !Validators.isValidEmail(value) ? 'Enter a valid email' : null,
+  void initState() {
+    super.initState();
+    _isSubmitting = false;
+    ref.listen<AsyncValue<User?>>(authControllerProvider, (previous, next) {
+      if (next is AsyncData<User?> && next.value != null) {
+        context.go('/home');
+      }
+      if (next is AsyncLoading) {
+        setState(() {
+            appBar: AppBar(title: const Text(AppStrings.loginTitle)),
+            body: Center(
+              child: SizedBox(
+                width: 480,
+                child: AppCard(
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        AppInput(label: AppStrings.email, controller: _emailController),
+                        const SizedBox(height: 12),
+                        AppInput(label: AppStrings.password, controller: _passwordController, obscure: true),
+                        const SizedBox(height: 20),
+                        authState is AsyncLoading
+                            ? const LoadingIndicator()
+                            : AppButton(label: 'Login', onPressed: _isSubmitting ? null : _onLoginPressed),
+                        if (authState is AsyncError) ...[
+                          const SizedBox(height: 12),
+                          Text(authState.error.toString(), style: const TextStyle(color: Colors.red)),
+                        ],
+                        const SizedBox(height: 12),
+                        TextButton(onPressed: _isSubmitting ? null : () => context.go('/register'), child: const Text('Create an account')),
+                      ],
+                    ),
+                  ),
+                ),
               ),
-              const SizedBox(height: 12),
-              TextFormField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(labelText: AppStrings.password),
-                validator: (value) => value == null || !Validators.isValidPassword(value) ? 'Password must be 8+ chars' : null,
+            ),
+                onPressed: _isSubmitting ? null : _onLoginPressed,
+                child: _isSubmitting
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                      )
+                    : const Text('Login'),
               ),
-              const SizedBox(height: 24),
-              ElevatedButton(onPressed: _onLoginPressed, child: const Text('Login')),
               if (authState is AsyncError) ...[
                 const SizedBox(height: 12),
                 Text(authState.error.toString(), style: const TextStyle(color: Colors.red)),
               ],
               const SizedBox(height: 12),
               TextButton(
-                onPressed: () => context.go('/register'),
+                onPressed: _isSubmitting ? null : () => context.go('/register'),
                 child: const Text('Create an account'),
               ),
             ],

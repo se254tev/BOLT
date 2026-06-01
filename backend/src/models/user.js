@@ -33,6 +33,15 @@ const userSchema = new mongoose.Schema({
   status: { type: String, enum: ['available', 'busy', 'offline'], default: 'offline' },
   isVerified: { type: Boolean, default: false },
   suspended: { type: Boolean, default: false },
+  paymentMethods: {
+    mpesaPhone: { type: String },
+    mpesaTill: { type: String },
+    mpesaPaybill: { type: String },
+    bankName: { type: String },
+    bankAccountNumber: { type: String },
+    accountName: { type: String },
+    airtelMoneyNumber: { type: String },
+  },
   createdAt: { type: Date, default: Date.now },
 });
 

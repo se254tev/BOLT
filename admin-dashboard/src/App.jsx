@@ -7,6 +7,7 @@ import UsersPage from './pages/UsersPage';
 import ReviewsPage from './pages/ReviewsPage';
 import CategoriesPage from './pages/CategoriesPage';
 import AdsPage from './pages/AdsPage';
+import PaymentsPage from './pages/PaymentsPage';
 import SettingsPage from './pages/SettingsPage';
 import PrivateRoute from './components/PrivateRoute';
 
@@ -22,6 +23,7 @@ const App = () => {
         <Route path="reviews" element={<ReviewsPage />} />
         <Route path="categories" element={<CategoriesPage />} />
         <Route path="ads" element={<AdsPage />} />
+        <Route path="payments" element={<PaymentsPage />} />
         <Route path="settings" element={<SettingsPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/login" replace />} />

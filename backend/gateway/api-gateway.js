@@ -12,6 +12,7 @@ const restaurantsRoutes = require('../src/routes/restaurants');
 const mealsRoutes = require('../src/routes/meals');
 const foodOrdersRoutes = require('../src/routes/foodOrders');
 const adminRoutes = require('../src/routes/admin');
+const uploadsRoutes = require('../src/routes/uploads');
 const healthRoutes = require('../src/routes/health');
 const deliveryRoutes = require('../src/routes/delivery');
 const authenticate = require('../src/middleware/authenticate');
@@ -20,6 +21,9 @@ const authorizeAdmin = require('../src/middleware/authorizeAdmin');
 const { adminLimiter } = require('../src/middleware/rateLimit');
 const { responseFormatter } = require('../src/middleware/responseFormatter');
 const { auditMiddleware } = require('../src/middleware/audit');
+const ERRORS = require('../src/constants/errorCodes');
+const { createError } = require('../src/utils/appError');
+const { errorResponse } = require('../src/utils/apiResponse');
 
 const router = express.Router();
 
@@ -40,11 +44,15 @@ router.use('/reviews', reviewsRoutes);
 router.use('/chat', chatRoutes);
 router.use('/users', usersRoutes);
 router.use('/delivery', deliveryRoutes);
+router.use('/uploads', uploadsRoutes);
 
 router.use('/admin', authenticateAdmin, authorizeAdmin(), adminLimiter, auditMiddleware, adminRoutes);
 
 router.use('/health', healthRoutes);
 
-router.use((req, res) => res.status(404).json({ error: 'Not found' }));
+router.use((req, res) => {
+  const error = createError(ERRORS.ENDPOINT_NOT_FOUND);
+  errorResponse(res, error);
+});
 
 module.exports = router;

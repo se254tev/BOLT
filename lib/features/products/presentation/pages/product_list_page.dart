@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/providers.dart';
 import '../../domain/entities/product.dart';
 import '../controllers/product_controller.dart';
 
@@ -11,9 +12,36 @@ class ProductListPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final productState = ref.watch(productControllerProvider);
+    final cartState = ref.watch(cartControllerProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('BOLT Home')),
+      appBar: AppBar(
+        title: const Text('BOLT Home'),
+        actions: [
+          IconButton(
+            icon: Stack(
+              alignment: Alignment.center,
+              children: [
+                const Icon(Icons.shopping_cart_outlined),
+                if (cartState.maybeWhen(data: (cart) => cart.itemCount > 0, orElse: () => false))
+                  Positioned(
+                    right: 2,
+                    top: 2,
+                    child: CircleAvatar(
+                      radius: 8,
+                      backgroundColor: Colors.redAccent,
+                      child: Text(
+                        cartState.value!.itemCount.toString(),
+                        style: const TextStyle(fontSize: 10, color: Colors.white),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            onPressed: () => context.go('/cart'),
+          )
+        ],
+      ),
       body: productState.when(
         data: (products) => ListView.builder(
           itemCount: products.length,

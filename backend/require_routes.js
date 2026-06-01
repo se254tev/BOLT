@@ -12,6 +12,7 @@ const routes = [
   './src/routes/products',
   './src/routes/properties',
   './src/routes/reviews',
+  './src/routes/orders',
   './src/routes/restaurants',
   './src/routes/users',
 ];

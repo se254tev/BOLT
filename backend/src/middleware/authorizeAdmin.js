@@ -1,17 +1,24 @@
+const ERRORS = require('../constants/errorCodes');
+const { createError } = require('../utils/appError');
+const { errorResponse } = require('../utils/apiResponse');
+
 const authorizeAdmin = (allowedPermissions = []) => (req, res, next) => {
   if (!req.user) {
-    return res.status(401).json({ success: false, message: 'Admin authorization required', code: 'authorization_required' });
+    const error = createError(ERRORS.AUTHORIZATION_REQUIRED);
+    return errorResponse(res, error);
   }
 
   if (req.user.role !== 'admin' && req.user.role !== 'super_admin') {
-    return res.status(403).json({ success: false, message: 'Insufficient privileges', code: 'insufficient_privileges' });
+    const error = createError(ERRORS.INSUFFICIENT_PRIVILEGES);
+    return errorResponse(res, error);
   }
 
   if (allowedPermissions.length > 0) {
     const tokenPermissions = Array.isArray(req.tokenPayload?.permissions) ? req.tokenPayload.permissions : [];
     const hasPermission = allowedPermissions.every((permission) => tokenPermissions.includes(permission));
     if (!hasPermission) {
-      return res.status(403).json({ success: false, message: 'Permission denied', code: 'permission_denied' });
+      const error = createError(ERRORS.PERMISSION_DENIED);
+      return errorResponse(res, error);
     }
   }
 

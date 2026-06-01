@@ -41,4 +41,14 @@ const getAgentSubscription = async (req, res) => {
   }
 };
 
-module.exports = { listUsers, getUser, updateUser, deleteUser, getAgentSubscription };
+const getPaymentMethods = async (req, res) => {
+  try {
+    const methods = await userService.getPaymentMethods(req.params.id);
+    if (!methods) return res.status(404).json({ error: 'Seller not found' });
+    res.json({ paymentMethods: methods });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+module.exports = { listUsers, getUser, updateUser, deleteUser, getAgentSubscription, getPaymentMethods };

@@ -2,14 +2,16 @@ const rateLimit = require('express-rate-limit');
 const RedisStore = require('rate-limit-redis');
 const redisClient = require('../config/redis');
 const logger = require('../services/logger');
+const ERRORS = require('../constants/errorCodes');
+const { createError } = require('../utils/appError');
+const { errorResponse } = require('../utils/apiResponse');
 
-const createLimiter = ({ windowMs, max, message, code }) => {
+const createLimiter = ({ windowMs, max, errorCode = ERRORS.RATE_LIMIT_EXCEEDED }) => {
   const options = {
     windowMs,
     max,
     standardHeaders: true,
     legacyHeaders: false,
-    message,
     handler: (req, res) => {
       logger.warn('Rate limit exceeded', {
         ip: req.ip,
@@ -18,7 +20,8 @@ const createLimiter = ({ windowMs, max, message, code }) => {
         max,
         requestId: req.requestId,
       });
-      res.status(429).json({ success: false, message: 'Too many requests. Please try again later.', code: code || 'rate_limit_exceeded' });
+      const error = createError(errorCode);
+      errorResponse(res, error);
     },
   };
 
@@ -32,32 +35,31 @@ const createLimiter = ({ windowMs, max, message, code }) => {
 const authLimiter = createLimiter({
   windowMs: 15 * 60 * 1000,
   max: 5,
-  message: 'Too many login attempts. Please wait 15 minutes.',
+  errorCode: ERRORS.LOGIN_RATE_LIMIT_EXCEEDED,
 });
 
 const generalLimiter = createLimiter({
   windowMs: 60 * 1000,
   max: 100,
-  message: 'Too many requests. Please slow down.',
+  errorCode: ERRORS.RATE_LIMIT_EXCEEDED,
 });
 
 const sellerLimiter = createLimiter({
   windowMs: 60 * 1000,
   max: 200,
-  message: 'Seller endpoint limit reached.',
+  errorCode: ERRORS.SELLER_RATE_LIMIT_EXCEEDED,
 });
 
 const adminLimiter = createLimiter({
   windowMs: 60 * 1000,
   max: 500,
-  message: 'Admin endpoint limit reached.',
+  errorCode: ERRORS.ADMIN_RATE_LIMIT_EXCEEDED,
 });
 
 const adminAuthLimiter = createLimiter({
   windowMs: 60 * 60 * 1000,
   max: 10,
-  message: 'Too many admin auth attempts. Try again later.',
-  code: 'admin_auth_rate_limited',
+  errorCode: ERRORS.ADMIN_AUTH_RATE_LIMIT_EXCEEDED,
 });
 
 module.exports = { authLimiter, generalLimiter, sellerLimiter, adminLimiter, adminAuthLimiter };

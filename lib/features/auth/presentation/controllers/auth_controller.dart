@@ -10,7 +10,7 @@ final authControllerProvider = StateNotifierProvider<AuthController, AsyncValue<
 
 class AuthController extends StateNotifier<AsyncValue<User?>> {
   final Reader read;
-  AuthController(this.read) : super(const AsyncValue.loading());
+  AuthController(this.read) : super(const AsyncValue.data(null));
 
   Future<void> login(String email, String password) async {
     state = const AsyncValue.loading();

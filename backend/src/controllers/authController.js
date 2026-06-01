@@ -13,6 +13,9 @@ const {
   blacklistAccessToken,
 } = require('../services/authService');
 const config = require('../config');
+const ERRORS = require('../constants/errorCodes');
+const { createError, AppError } = require('../utils/appError');
+const { successResponse, createdResponse, errorResponse } = require('../utils/apiResponse');
 
 const createTokens = async (user) => {
   const { token: accessToken, jti: accessJti } = signAccessToken(user.id, user.role, user.tokenVersion);
@@ -24,7 +27,8 @@ const register = async (req, res) => {
   const { name, email, password, phone, role } = req.validated;
   const existing = await User.findOne({ email });
   if (existing) {
-    return res.status(409).json({ success: false, message: 'Email already registered', code: 'email_in_use' });
+    const error = createError(ERRORS.EMAIL_ALREADY_REGISTERED);
+    return errorResponse(res, error);
   }
 
   const hashedPassword = await hashPassword(password);
@@ -55,7 +59,7 @@ const register = async (req, res) => {
   });
 
   const responseUser = await User.findById(user.id).select('-password');
-  return res.status(201).json({ success: true, data: { accessToken, user: responseUser }, message: 'Registration successful', code: 'registration_success' });
+  return createdResponse(res, { accessToken, user: responseUser }, 'Registration successful');
 };
 
 const login = async (req, res) => {
@@ -63,15 +67,18 @@ const login = async (req, res) => {
   const user = await User.findOne({ email });
 
   if (!user || !(await comparePassword(password, user.password))) {
-    return res.status(401).json({ success: false, message: 'Invalid credentials', code: 'invalid_credentials' });
+    const error = createError(ERRORS.INVALID_CREDENTIALS);
+    return errorResponse(res, error);
   }
 
   if (user.role === 'admin' || user.role === 'super_admin') {
-    return res.status(403).json({ success: false, message: 'Admin users must sign in through the admin auth endpoint', code: 'admin_auth_required' });
+    const error = createError(ERRORS.ADMIN_AUTH_REQUIRED);
+    return errorResponse(res, error);
   }
 
   if (user.suspended || user.accountStatus !== 'active') {
-    return res.status(403).json({ success: false, message: 'Account disabled', code: 'account_disabled' });
+    const error = createError(ERRORS.ACCOUNT_DISABLED);
+    return errorResponse(res, error);
   }
 
   const { accessToken, refreshToken, refreshJti } = await createTokens(user);
@@ -86,35 +93,40 @@ const login = async (req, res) => {
   });
 
   const responseUser = await User.findById(user.id).select('-password');
-  res.json({ success: true, data: { accessToken, user: responseUser }, message: 'Login successful', code: 'login_success' });
+  successResponse(res, { accessToken, user: responseUser }, 'Login successful');
 };
 
 const refresh = async (req, res) => {
   const refreshToken = req.cookies?.[config.cookieName];
 
   if (!refreshToken) {
-    return res.status(401).json({ success: false, message: 'Refresh token required', code: 'refresh_required' });
+    const error = createError(ERRORS.REFRESH_TOKEN_REQUIRED);
+    return errorResponse(res, error);
   }
 
   try {
     const payload = verifyToken(refreshToken);
 
     if (payload.type !== 'refresh') {
-      return res.status(401).json({ success: false, message: 'Invalid refresh token', code: 'invalid_refresh_token' });
+      const error = createError(ERRORS.INVALID_REFRESH_TOKEN);
+      return errorResponse(res, error);
     }
 
     const user = await User.findById(payload.id).select('-password');
     if (!user || user.suspended || user.accountStatus !== 'active') {
-      return res.status(403).json({ success: false, message: 'Account disabled', code: 'account_disabled' });
+      const error = createError(ERRORS.ACCOUNT_DISABLED);
+      return errorResponse(res, error);
     }
 
     if (user.tokenVersion !== payload.tokenVersion) {
-      return res.status(401).json({ success: false, message: 'Session expired', code: 'session_expired' });
+      const error = createError(ERRORS.SESSION_EXPIRED);
+      return errorResponse(res, error);
     }
 
     const isValid = await validateRefreshSession(user.id, payload.jti, refreshToken);
     if (!isValid) {
-      return res.status(401).json({ success: false, message: 'Refresh token invalid or expired', code: 'invalid_refresh_session' });
+      const error = createError(ERRORS.INVALID_REFRESH_TOKEN);
+      return errorResponse(res, error);
     }
 
     const { accessToken, refreshToken: newRefreshToken, refreshJti } = await createTokens(user);
@@ -128,9 +140,10 @@ const refresh = async (req, res) => {
       path: '/',
     });
 
-    res.json({ success: true, data: { accessToken }, message: 'Token refreshed', code: 'refresh_success' });
+    successResponse(res, { accessToken }, 'Token refreshed');
   } catch (err) {
-    return res.status(401).json({ success: false, message: 'Invalid refresh token', code: 'invalid_refresh_token' });
+    const error = createError(ERRORS.INVALID_REFRESH_TOKEN);
+    return errorResponse(res, error);
   }
 };
 
@@ -182,7 +195,7 @@ const logout = async (req, res) => {
     path: '/',
   });
 
-  res.json({ success: true, message: 'Logged out', code: 'logout_success' });
+  successResponse(res, null, 'Logged out');
 };
 
 const forgotPassword = async (req, res) => {
@@ -190,7 +203,7 @@ const forgotPassword = async (req, res) => {
   const user = await User.findOne({ email });
 
   if (!user) {
-    return res.status(204).json({ success: true, message: 'If your email exists, you will receive a password reset link shortly.', code: 'password_reset_initiated' });
+    return successResponse(res, null, 'If your email exists, you will receive a password reset link shortly.', 204);
   }
 
   const resetToken = crypto.randomBytes(24).toString('hex');
@@ -198,7 +211,7 @@ const forgotPassword = async (req, res) => {
   user.passwordResetExpires = Date.now() + 1000 * 60 * 60;
   await user.save();
 
-  res.json({ success: true, message: 'If your email exists, you will receive a password reset link shortly.', code: 'password_reset_initiated' });
+  successResponse(res, null, 'If your email exists, you will receive a password reset link shortly.');
 };
 
 const resetPassword = async (req, res) => {
@@ -206,7 +219,8 @@ const resetPassword = async (req, res) => {
   const user = await User.findOne({ passwordResetToken: token, passwordResetExpires: { $gt: Date.now() } });
 
   if (!user) {
-    return res.status(400).json({ success: false, message: 'Invalid or expired reset token', code: 'invalid_reset_token' });
+    const error = createError(ERRORS.INVALID_RESET_TOKEN);
+    return errorResponse(res, error);
   }
 
   user.password = await hashPassword(password);
@@ -214,7 +228,7 @@ const resetPassword = async (req, res) => {
   user.passwordResetExpires = undefined;
   await user.save();
 
-  res.json({ success: true, message: 'Password reset successfully', code: 'password_reset_success' });
+  successResponse(res, null, 'Password reset successfully');
 };
 
 const verifyEmail = async (req, res) => {
@@ -222,7 +236,8 @@ const verifyEmail = async (req, res) => {
   const user = await User.findOne({ emailVerificationToken: token, emailVerificationExpires: { $gt: Date.now() } });
 
   if (!user) {
-    return res.status(400).json({ success: false, message: 'Invalid or expired verification token', code: 'invalid_verification_token' });
+    const error = createError(ERRORS.INVALID_VERIFICATION_TOKEN);
+    return errorResponse(res, error);
   }
 
   user.emailVerified = true;
@@ -230,7 +245,7 @@ const verifyEmail = async (req, res) => {
   user.emailVerificationExpires = undefined;
   await user.save();
 
-  res.json({ success: true, message: 'Email verified successfully', code: 'verification_success' });
+  successResponse(res, null, 'Email verified successfully');
 };
 
 module.exports = { register, login, refresh, logout, forgotPassword, resetPassword, verifyEmail };

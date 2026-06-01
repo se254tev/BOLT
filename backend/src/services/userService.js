@@ -33,4 +33,9 @@ const deleteUser = async ({ id, user }) => {
 
 const getAgentSubscription = async (agentId) => getSubscriptionForAgent(agentId);
 
-module.exports = { listUsers, getUser, updateUser, deleteUser, getAgentSubscription };
+const getPaymentMethods = async (userId) => {
+  const user = await User.findById(userId).select('paymentMethods');
+  return user ? user.paymentMethods : null;
+};
+
+module.exports = { listUsers, getUser, updateUser, deleteUser, getAgentSubscription, getPaymentMethods };

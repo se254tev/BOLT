@@ -9,7 +9,8 @@
     "lint": "echo \"No lint configured yet\"",
     "prepare": "echo 'Prepare step'",
     "diagnose": "node scripts/deployment-audit.js",
-    "check:deps": "node ../scripts/check-dependencies.js"
+    "check:deps": "node ../scripts/check-dependencies.js",
+    "migrate:payments": "node scripts/migratePaymentStatuses.js"
   },
   "dependencies": {
     "argon2": "^0.44.0",

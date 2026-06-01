@@ -1,28 +1,66 @@
-import Sidebar from '../components/Sidebar';
+import React, { useEffect, useState } from 'react';
+import Layout from '../components/Layout';
+import Card from '../components/Card';
+import Button from '../components/Button';
+import api from '../services/api';
+import { notifyToast } from '../utils/toast';
 
-const ReviewsPage = () => (
-  <div className="min-h-screen bg-slate-950 text-slate-100">
-    <div className="flex">
-      <Sidebar />
-      <main className="flex-1 p-6">
-        <div className="rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-xl shadow-slate-950/20">
-          <h1 className="text-3xl font-semibold text-white">Review Moderation</h1>
-          <p className="mt-2 text-slate-400">Delete inappropriate reviews and protect buyer trust.</p>
-          <div className="mt-6 space-y-4">
-            <div className="rounded-3xl bg-slate-950 p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-white">Great product but delivery delay</p>
-                  <p className="mt-1 text-slate-400 text-sm">by user@example.com on Product A</p>
-                </div>
-                <button className="rounded-full bg-rose-500 px-3 py-1 text-xs font-semibold text-white">Delete</button>
-              </div>
-            </div>
-          </div>
+const ReviewsPage = () => {
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchReviews = async () => {
+    setLoading(true);
+    try {
+      const res = await api.get('/reviews');
+      setReviews(res.data?.reviews || res.data || []);
+    } catch (err) {
+      notifyToast('Failed to load reviews');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { fetchReviews(); }, []);
+
+  const remove = async (id) => {
+    const prev = reviews.slice();
+    setReviews((r) => r.filter((x) => x._id !== id));
+    try {
+      await api.delete(`/admin/reviews/${id}`);
+      notifyToast('Review deleted');
+    } catch (err) {
+      setReviews(prev);
+      notifyToast('Delete failed');
+      throw err;
+    }
+  };
+
+  return (
+    <Layout>
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-2xl font-semibold">Review Moderation</h1>
+          <p className="text-sm text-gray-600">Delete inappropriate reviews and protect buyer trust.</p>
         </div>
-      </main>
-    </div>
-  </div>
-);
+        <Card>
+          <div className="space-y-4">
+            {loading ? <div className="p-8 text-center text-gray-500">Loading…</div> : reviews.length === 0 ? <div className="p-8 text-center text-gray-500">No reviews</div> : reviews.map((rev) => (
+              <div key={rev._id} className="rounded-lg p-4 bg-white border">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-gray-900">{rev.content || rev.comment}</p>
+                    <p className="mt-1 text-sm text-gray-600">by {rev.userEmail || rev.user?.email} on {rev.productTitle || rev.product?.title}</p>
+                  </div>
+                  <Button variant="ghost" confirmText="Delete this review?" onClick={() => remove(rev._id)}>Delete</Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+      </div>
+    </Layout>
+  );
+};
 
 export default ReviewsPage;

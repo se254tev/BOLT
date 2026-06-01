@@ -1,10 +1,16 @@
+const ERRORS = require('../constants/errorCodes');
+const { createError } = require('../utils/appError');
+const { errorResponse } = require('../utils/apiResponse');
+
 const authorize = (allowedRoles = []) => (req, res, next) => {
   if (!req.user) {
-    return res.status(401).json({ success: false, message: 'Authorization required', code: 'authorization_required' });
+    const error = createError(ERRORS.AUTHORIZATION_REQUIRED);
+    return errorResponse(res, error);
   }
 
   if (!allowedRoles.includes(req.user.role)) {
-    return res.status(403).json({ success: false, message: 'Insufficient privileges', code: 'insufficient_privileges' });
+    const error = createError(ERRORS.INSUFFICIENT_PRIVILEGES);
+    return errorResponse(res, error);
   }
 
   next();

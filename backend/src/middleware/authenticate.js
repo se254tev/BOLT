@@ -3,6 +3,9 @@ const config = require('../config');
 const User = require('../models/user');
 const logger = require('../services/logger');
 const { isAccessTokenRevoked } = require('../core/redis/tokenStore');
+const ERRORS = require('../constants/errorCodes');
+const { createError } = require('../utils/appError');
+const { errorResponse } = require('../utils/apiResponse');
 
 const authenticate = async (req, res, next) => {
   if (req.method === 'OPTIONS') return next();
@@ -16,7 +19,8 @@ const authenticate = async (req, res, next) => {
       requestId: req.requestId,
       ip: req.ip,
     });
-    return res.status(401).json({ success: false, message: 'Authentication required', code: 'authentication_required' });
+    const error = createError(ERRORS.AUTHENTICATION_REQUIRED);
+    return errorResponse(res, error);
   }
 
   const token = authHeader.split(' ')[1];
@@ -29,7 +33,8 @@ const authenticate = async (req, res, next) => {
         requestId: req.requestId,
         ip: req.ip,
       });
-      return res.status(401).json({ success: false, message: 'Invalid access token', code: 'invalid_token' });
+      const error = createError(ERRORS.INVALID_TOKEN);
+      return errorResponse(res, error);
     }
 
     if (await isAccessTokenRevoked(payload.jti)) {
@@ -38,7 +43,8 @@ const authenticate = async (req, res, next) => {
         tokenId: payload.jti,
         ip: req.ip,
       });
-      return res.status(401).json({ success: false, message: 'Revoked access token', code: 'token_revoked' });
+      const error = createError(ERRORS.TOKEN_REVOKED);
+      return errorResponse(res, error);
     }
 
     const user = await User.findById(payload.id).select('-password');
@@ -49,7 +55,8 @@ const authenticate = async (req, res, next) => {
         userId: payload.id,
         ip: req.ip,
       });
-      return res.status(403).json({ success: false, message: 'Account disabled', code: 'account_disabled' });
+      const error = createError(ERRORS.ACCOUNT_DISABLED);
+      return errorResponse(res, error);
     }
 
     if (user.tokenVersion !== payload.tokenVersion) {
@@ -58,7 +65,8 @@ const authenticate = async (req, res, next) => {
         userId: payload.id,
         ip: req.ip,
       });
-      return res.status(401).json({ success: false, message: 'Session expired', code: 'session_expired' });
+      const error = createError(ERRORS.SESSION_EXPIRED);
+      return errorResponse(res, error);
     }
 
     req.user = user;
@@ -70,7 +78,8 @@ const authenticate = async (req, res, next) => {
       ip: req.ip,
       reason: err.message,
     });
-    return res.status(401).json({ success: false, message: 'Session invalid or expired', code: 'invalid_session' });
+    const error = createError(ERRORS.SESSION_EXPIRED);
+    return errorResponse(res, error);
   }
 };
 

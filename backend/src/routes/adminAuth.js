@@ -17,6 +17,7 @@ router.use(sanitize.sanitizeMiddleware);
 router.post('/login', adminAuthLimiter, validateRequest(schemas.loginSchema), adminAuthController.login);
 router.post('/refresh', adminAuthLimiter, adminAuthController.refresh);
 router.post('/logout', authenticateAdmin, adminAuthController.logout);
+router.get('/me', authenticateAdmin, adminAuthController.me);
 
 // MFA
 router.post('/mfa/setup', authenticateAdmin, adminMfaController.setup);

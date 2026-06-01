@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class AdminDashboardPage extends StatelessWidget {
   const AdminDashboardPage({super.key});
@@ -14,11 +15,11 @@ class AdminDashboardPage extends StatelessWidget {
           children: [
             const Text('Admin tools for verification, moderation, and analytics', style: TextStyle(fontSize: 18)),
             const SizedBox(height: 24),
-            ElevatedButton(onPressed: () {}, child: const Text('Verify Products')),
+            ElevatedButton(onPressed: () => context.go('/home'), child: const Text('Verify Products')),
             const SizedBox(height: 12),
-            ElevatedButton(onPressed: () {}, child: const Text('Verify Properties')),
+            ElevatedButton(onPressed: () => context.go('/home'), child: const Text('Verify Properties')),
             const SizedBox(height: 12),
-            ElevatedButton(onPressed: () {}, child: const Text('Manage Users')),
+            ElevatedButton(onPressed: () => context.go('/profile'), child: const Text('Manage Users')),
           ],
         ),
       ),

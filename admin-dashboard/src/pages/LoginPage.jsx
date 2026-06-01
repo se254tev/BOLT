@@ -17,9 +17,17 @@ const LoginPage = () => {
       const admin = response.data?.data?.admin;
       if (accessToken) localStorage.setItem('bolt_admin_token', accessToken);
       if (admin?.role) localStorage.setItem('bolt_admin_role', admin.role);
+      localStorage.setItem('bolt_admin_validated_at', String(Date.now()));
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed');
+      const status = err.response?.status;
+      if (!status) {
+        setError('Network error. Check your connection and try again.');
+      } else if (status === 401 || status === 403) {
+        setError(err.response?.data?.message || 'Invalid credentials.');
+      } else {
+        setError(err.response?.data?.message || 'Login failed. Please try again.');
+      }
     }
   };
 

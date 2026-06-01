@@ -1,4 +1,7 @@
 const redisClient = require('../config/redis');
+const ERRORS = require('../constants/errorCodes');
+const { createError } = require('../utils/appError');
+const { errorResponse } = require('../utils/apiResponse');
 
 const tierLimits = {
   guest: { window: 60, limit: 30 },
@@ -17,7 +20,8 @@ const throttle = async (req, res, next) => {
     await redisClient.expire(key, window);
   }
   if (current > limit) {
-    return res.status(429).json({ error: 'Rate limit exceeded, please try later.' });
+    const error = createError(ERRORS.RATE_LIMIT_EXCEEDED);
+    return errorResponse(res, error);
   }
   next();
 };

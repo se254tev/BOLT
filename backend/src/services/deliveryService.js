@@ -4,6 +4,7 @@ const Product = require('../models/product');
 const User = require('../models/user');
 const deliveryStore = require('../core/redis/deliveryStore');
 const AuditLog = require('../models/auditLog');
+const { PAYMENT_STATUS } = require('../utils/paymentConstants');
 
 const DELIVERY_TRANSITIONS = {
   pending_assignment: ['assigned', 'cancelled'],
@@ -104,14 +105,14 @@ const syncFoodOrderStatus = async (order, status) => {
 
   if (status === 'delivered' && !['completed', 'cancelled', 'refunded'].includes(foodOrder.status)) {
     foodOrder.status = 'completed';
-    if (foodOrder.orderPaymentStatus !== 'paid') {
-      foodOrder.orderPaymentStatus = 'paid';
+    if (foodOrder.paymentStatus !== PAYMENT_STATUS.PAID) {
+      foodOrder.paymentStatus = PAYMENT_STATUS.PAID;
     }
   }
 
   if (['failed', 'cancelled'].includes(status) && !['completed', 'cancelled', 'refunded'].includes(foodOrder.status)) {
     foodOrder.status = 'cancelled';
-    foodOrder.orderPaymentStatus = 'failed';
+    foodOrder.paymentStatus = PAYMENT_STATUS.PAYMENT_REJECTED;
   }
 
   await foodOrder.save();

@@ -3,6 +3,7 @@ const { Meal } = require('../models/meal');
 const FoodOrder = require('../models/foodOrder');
 const deliveryService = require('./deliveryService');
 const AuditLog = require('../models/auditLog');
+const { PAYMENT_STATUS } = require('../utils/paymentConstants');
 
 const FOOD_ORDER_TRANSITIONS = {
   created: ['payment_pending'],
@@ -89,8 +90,8 @@ const createFoodOrder = async ({ user, payload }) => {
   if (meals.length !== payload.mealItems.length) throw new Error('One or more meals are invalid');
 
   const totalAmount = payload.mealItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const orderPaymentStatus = payload.orderPaymentStatus || 'pending';
-  const status = orderPaymentStatus === 'paid' ? 'paid' : 'payment_pending';
+  const paymentStatus = payload.paymentStatus || PAYMENT_STATUS.PENDING;
+  const status = paymentStatus === PAYMENT_STATUS.PAID ? 'paid' : 'payment_pending';
   const dropoffLocation = payload.dropoffLocation || (user.currentLocation?.lat && user.currentLocation?.lng ? {
     lat: user.currentLocation.lat,
     lng: user.currentLocation.lng,
@@ -108,7 +109,7 @@ const createFoodOrder = async ({ user, payload }) => {
     deliveryMode: payload.deliveryMode,
     deliveryAddress: payload.deliveryAddress,
     dropoffLocation,
-    orderPaymentStatus,
+    paymentStatus,
     status,
   });
 
@@ -155,12 +156,12 @@ const updateFoodOrderStatus = async ({ id, status, user }) => {
 
   if (status === 'paid') {
     if (!buyer && !isAdmin) throw new Error('Only the buyer may mark an order as paid');
-    order.orderPaymentStatus = 'paid';
+    order.paymentStatus = PAYMENT_STATUS.PAID;
   }
 
   if (['accepted', 'rejected', 'preparing', 'ready_for_pickup', 'cancelled'].includes(status)) {
     if (!restaurantOwner && !isAdmin) throw new Error('Only restaurant owners may update this order status');
-    if (status === 'accepted' && order.orderPaymentStatus !== 'paid') {
+    if (status === 'accepted' && order.paymentStatus !== PAYMENT_STATUS.PAID) {
       throw new Error('Cannot accept an order that has not been paid');
     }
   }
@@ -180,8 +181,8 @@ const updateFoodOrderStatus = async ({ id, status, user }) => {
     throw new Error('Only administrators may refund orders');
   }
 
-  if (status === 'cancelled' && order.orderPaymentStatus === 'paid') {
-    order.orderPaymentStatus = 'failed';
+  if (status === 'cancelled' && order.paymentStatus === PAYMENT_STATUS.PAID) {
+    order.paymentStatus = PAYMENT_STATUS.PAYMENT_REJECTED;
   }
 
   order.status = status;

@@ -251,4 +251,15 @@ const revokeAllSessions = async (req, res) => {
   res.json({ success: true, message: 'All sessions revoked' });
 };
 
-module.exports = { login, refresh, logout, listSessions, revokeSession, revokeAllSessions };
+const me = async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ success: false, message: 'Session invalid', code: 'invalid_session' });
+  }
+  const admin = await User.findById(req.user.id).select('-password -emailVerificationToken -emailVerificationExpires -passwordResetToken -passwordResetExpires -mfaSecret');
+  if (!admin) {
+    return res.status(404).json({ success: false, message: 'Admin not found', code: 'admin_not_found' });
+  }
+  res.json({ success: true, data: { admin }, message: 'Admin session valid', code: 'admin_session_valid' });
+};
+
+module.exports = { login, refresh, logout, listSessions, revokeSession, revokeAllSessions, me };

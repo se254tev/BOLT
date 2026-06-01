@@ -8,19 +8,20 @@ const links = [
   { label: 'Reviews', path: '/reviews' },
   { label: 'Categories', path: '/categories' },
   { label: 'Ads', path: '/ads' },
+  { label: 'Payments', path: '/payments' },
   { label: 'Settings', path: '/settings' },
 ];
 
 const Sidebar = () => (
-  <div className="min-h-screen w-64 bg-slate-900 border-r border-slate-800 p-4 hidden md:block">
-    <div className="mb-8 text-slate-100 text-lg font-semibold">BOLT Admin</div>
+  <div className="min-h-screen w-64 bg-white border-r border-gray-200 p-4 hidden md:block">
+    <div className="mb-8 text-black text-lg font-semibold">BOLT Admin</div>
     <nav className="space-y-2">
       {links.map((link) => (
         <NavLink
           key={link.path}
           to={link.path}
           className={({ isActive }) =>
-            `block rounded-lg px-4 py-3 text-sm font-medium ${isActive ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white'}`
+            `block rounded-lg px-4 py-3 text-sm font-medium ${isActive ? 'bg-black text-white' : 'text-gray-700 hover:bg-gray-100'}`
           }
         >
           {link.label}
