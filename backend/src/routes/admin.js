@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const adminController = require('../controllers/adminController');
+const { requireController } = require('../utils/requireController');
+const adminController = requireController('../controllers/adminController');
 
 router.get('/analytics', adminController.getAnalytics);
 router.patch('/products/:action(approve|reject)/:id', adminController.moderateProduct);

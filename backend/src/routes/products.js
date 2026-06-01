@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
+const { requireController } = require('../utils/requireController');
 const sanitize = require('../middleware/sanitize');
 const authenticate = require('../middleware/authenticate');
 const { generalLimiter, sellerLimiter } = require('../middleware/rateLimit');
 const validateRequest = require('../middleware/validate');
 const { productSchema } = require('../schemas/product');
 const validateObjectId = require('../middleware/validateObjectId');
-const productController = require('../controllers/productController');
+const productController = requireController('../controllers/productController');
 
 router.use(sanitize.sanitizeMiddleware);
 router.use(generalLimiter);

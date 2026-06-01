@@ -4,7 +4,8 @@ const cookieParser = require('cookie-parser');
 const validateRequest = require('../middleware/validate');
 const sanitize = require('../middleware/sanitize');
 const { authLimiter } = require('../middleware/rateLimit');
-const authController = require('../controllers/authController');
+const { requireController } = require('../utils/requireController');
+const authController = requireController('../controllers/authController');
 const schemas = require('../schemas/auth');
 
 router.use(cookieParser());

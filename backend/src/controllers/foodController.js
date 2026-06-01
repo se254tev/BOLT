@@ -49,6 +49,15 @@ const getMeal = async (req, res) => {
   res.json({ meal });
 };
 
+const removeMealListing = async (req, res) => {
+  try {
+    await foodService.removeMeal({ mealId: req.params.id, user: req.user });
+    res.status(204).send();
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
 const createFoodOrder = async (req, res) => {
   try {
     const order = await foodService.createFoodOrder({ user: req.user, payload: req.validated || req.body });
@@ -93,6 +102,7 @@ module.exports = {
   createMeal,
   listMeals,
   getMeal,
+  removeMealListing,
   createFoodOrder,
   getFoodOrder,
   updateFoodOrderStatus,

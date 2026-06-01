@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const { requireController } = require('../utils/requireController');
 const sanitize = require('../middleware/sanitize');
 const authenticate = require('../middleware/authenticate');
 const validateObjectId = require('../middleware/validateObjectId');
 const validateRequest = require('../middleware/validate');
 const { foodOrderSchema, orderStatusSchema } = require('../schemas/foodOrder');
-const foodController = require('../controllers/foodController');
+const foodController = requireController('../controllers/foodController');
 
 router.use(sanitize.sanitizeMiddleware);
 

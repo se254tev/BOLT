@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
+const { requireController } = require('../utils/requireController');
 const sanitize = require('../middleware/sanitize');
 const authenticate = require('../middleware/authenticate');
 const authorize = require('../middleware/authorize');
 const validateRequest = require('../middleware/validate');
 const validateObjectId = require('../middleware/validateObjectId');
 const { createDeliverySchema, updateLocationSchema, updateStatusSchema } = require('../schemas/delivery');
-const deliveryController = require('../controllers/deliveryController');
+const deliveryController = requireController('../controllers/deliveryController');
 
 router.use(sanitize.sanitizeMiddleware);
 

@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const { requireController } = require('../utils/requireController');
 const authenticate = require('../middleware/authenticate');
 const authorize = require('../middleware/authorize');
 const validateObjectId = require('../middleware/validateObjectId');
 const validateRequest = require('../middleware/validate');
 const { userUpdateSchema } = require('../schemas/user');
-const userController = require('../controllers/userController');
+const userController = requireController('../controllers/userController');
 
 router.get('/', authenticate, authorize(['admin', 'super_admin']), userController.listUsers);
 router.get('/agents/subscription', authenticate, userController.getAgentSubscription);

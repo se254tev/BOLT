@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const { requireController } = require('../utils/requireController');
 const authenticate = require('../middleware/authenticate');
 const validateRequest = require('../middleware/validate');
 const { reviewSchema } = require('../schemas/review');
 const validateObjectId = require('../middleware/validateObjectId');
-const reviewController = require('../controllers/reviewController');
+const reviewController = requireController('../controllers/reviewController');
 
 router.get('/', authenticate, reviewController.listReviews);
 router.post('/', authenticate, validateRequest(reviewSchema), reviewController.createReview);

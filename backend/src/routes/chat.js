@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const { requireController } = require('../utils/requireController');
 const authenticate = require('../middleware/authenticate');
 const validateRequest = require('../middleware/validate');
 const { messageSchema } = require('../schemas/message');
 const validateObjectId = require('../middleware/validateObjectId');
-const chatController = require('../controllers/chatController');
+const chatController = requireController('../controllers/chatController');
 
 router.get('/', authenticate, chatController.listConversations);
 router.get('/:id/messages', authenticate, validateObjectId('id'), chatController.getMessages);
