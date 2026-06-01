@@ -17,7 +17,10 @@ module.exports = {
   jwtAccessExpiresIn: process.env.JWT_ACCESS_EXPIRES_IN || '15m',
   jwtRefreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '30d',
   bcryptSaltRounds: parseInt(process.env.BCRYPT_SALT_ROUNDS, 10) || 12,
-  redisUrl: process.env.REDIS_URL || ' redis://default:SbHq77AIqKhqdunbGL71EHtUaEXKNzOm@frosted-bluish-engrossing-76598.db.redis.io:15446',
+  // Redis connection must be provided via environment variable `REDIS_URL`.
+  // Do NOT hardcode Redis hosts in code. If missing, Redis features will be
+  // disabled at runtime and the app will continue starting.
+  redisUrl: process.env.REDIS_URL || null,
   allowedOrigins,
   cookieName: process.env.REFRESH_TOKEN_COOKIE_NAME || 'bolt_refresh_token',
   adminCookieName: process.env.ADMIN_REFRESH_TOKEN_COOKIE_NAME || 'bolt_admin_refresh_token',
