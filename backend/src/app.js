@@ -18,6 +18,7 @@ const metricsRoutes = require('./routes/metrics');
 
 
 const app = express();
+app.set('trust proxy', 1);
 app.use(requestId);
 app.use(requestLogger);
 app.use(responseFormatter);
@@ -27,16 +28,18 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser());
 
-// Debug logging for CORS/preflight troubleshooting (temporary)
+// Debug logging for Render + CORS troubleshooting (temporary)
 app.use((req, res, next) => {
-  console.log('ORIGIN:', req.headers.origin);
-  console.log('METHOD:', req.method, req.path);
+  console.log('Incoming request:', req.method, req.originalUrl);
+  console.log('Protocol:', req.protocol);
+  console.log('X-Forwarded-Proto:', req.headers['x-forwarded-proto']);
+  console.log('Origin:', req.headers.origin);
   next();
 });
 
-// CORS must run before any authentication/redirect middleware
+// CORS must run before any authentication middleware
 app.use(corsMiddleware);
-app.options('*', corsOptions ? require('cors')(corsOptions) : (req, res) => res.sendStatus(204));
+app.options('*', corsMiddleware);
 
 app.use(
   helmet({
@@ -56,14 +59,6 @@ app.use(
 app.use(compression());
 app.use(sanitizeMiddleware);
 app.use(metricsMiddleware);
-
-// Do NOT redirect OPTIONS preflight requests; only redirect non-OPTIONS http traffic
-app.use((req, res, next) => {
-  if (req.method !== 'OPTIONS' && req.protocol === 'http' && config.nodeEnv === 'production') {
-    return res.redirect(301, `https://${req.headers.host}${req.url}`);
-  }
-  next();
-});
 
 app.use(generalLimiter);
 
