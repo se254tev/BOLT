@@ -6,7 +6,7 @@ const app = require('./src/app');
 const config = require('./src/config');
 
 // Startup diagnostics for Redis configuration
-console.log('REDIS_URL:', process.env.REDIS_URL ? '[CONFIGURED]' : '[MISSING]');
+console.log('Redis URL source:', process.env.REDIS_URL ? 'ENVIRONMENT' : 'MISSING');
 
 const PORT = config.port;
 

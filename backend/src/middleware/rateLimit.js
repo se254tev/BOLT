@@ -23,7 +23,7 @@ const createLimiter = ({ windowMs, max, message, code }) => {
   };
 
   if (redisClient) {
-    options.store = new RedisStore({ sendCommand: (...args) => redisClient.call(...args) });
+    options.store = new RedisStore({ client: redisClient, passIfNotConnected: true });
   }
 
   return rateLimit(options);
