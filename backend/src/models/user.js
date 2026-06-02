@@ -20,6 +20,28 @@ const userSchema = new mongoose.Schema({
   passwordResetExpires: { type: Date },
   accountStatus: { type: String, enum: ['active', 'disabled'], default: 'active' },
   tokenVersion: { type: Number, default: 0 },
+  // Seller lifecycle status: none -> pending -> approved -> active -> rejected
+  sellerStatus: {
+    type: String,
+    enum: ['none', 'pending', 'approved', 'active', 'rejected'],
+    default: 'none',
+  },
+  sellerApplication: {
+    businessName: { type: String },
+    businessPhone: { type: String },
+    businessAddress: { type: String },
+    nationalId: { type: String },
+    taxNumber: { type: String },
+    submittedAt: { type: Date },
+    reviewedAt: { type: Date },
+    reviewedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    rejectionReason: { type: String },
+  },
+  applicationDate: { type: Date },
+  approvedAt: { type: Date },
+  approvedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  rejectedAt: { type: Date },
+  rejectionReason: { type: String },
   mfaEnabled: { type: Boolean, default: false },
   mfaSecret: { type: String },
   // Delivery agent fields
@@ -48,5 +70,8 @@ const userSchema = new mongoose.Schema({
 userSchema.methods.hasRole = function (roles) {
   return roles.includes(this.role);
 };
+
+// index for quick seller status queries
+userSchema.index({ sellerStatus: 1 });
 
 module.exports = mongoose.model('User', userSchema);

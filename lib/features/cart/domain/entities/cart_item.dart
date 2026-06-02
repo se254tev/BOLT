@@ -14,4 +14,12 @@ class CartItem {
   });
 
   double get subtotal => price * quantity;
+
+  Map<String, dynamic> toJson() => {
+        'productId': productId,
+        'productName': productName,
+        'price': price,
+        'quantity': quantity,
+        if (productImage != null) 'productImage': productImage,
+      };
 }

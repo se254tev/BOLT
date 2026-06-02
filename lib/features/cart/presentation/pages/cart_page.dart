@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/providers.dart';
-import '../../../shared/widgets/button_widget.dart';
+import 'package:bolt_marketplace/core/providers.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:bolt_marketplace/shared/widgets/app_button.dart';
 
 class CartPage extends ConsumerWidget {
   const CartPage({super.key});
@@ -87,7 +88,14 @@ class CartPage extends ConsumerWidget {
                               if (item.productImage != null)
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(12),
-                                  child: Image.network(item.productImage!, width: 72, height: 72, fit: BoxFit.cover),
+                                  child: CachedNetworkImage(
+                                    imageUrl: item.productImage!,
+                                    width: 72,
+                                    height: 72,
+                                    fit: BoxFit.cover,
+                                    placeholder: (ctx, _) => Container(width: 72, height: 72, color: Colors.grey.shade200),
+                                    errorWidget: (ctx, _, __) => Container(width: 72, height: 72, color: Colors.grey.shade200, child: const Icon(Icons.broken_image)),
+                                  ),
                                 )
                               else
                                 Container(
@@ -106,7 +114,7 @@ class CartPage extends ConsumerWidget {
                                   children: [
                                     Text(item.productName, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                                     const SizedBox(height: 4),
-                                    Text('$${item.price.toStringAsFixed(2)}', style: const TextStyle(fontSize: 14, color: Colors.black87)),
+                                    Text('\$\${item.price.toStringAsFixed(2)}', style: const TextStyle(fontSize: 14, color: Colors.black87)),
                                     const SizedBox(height: 8),
                                     Row(
                                       children: [
@@ -151,11 +159,11 @@ class CartPage extends ConsumerWidget {
   Widget _buildCartSummary(BuildContext context, WidgetRef ref, cart) {
     return Column(
       children: [
-        _buildSummaryRow('Subtotal', '$${cart.subtotal.toStringAsFixed(2)}'),
+        _buildSummaryRow('Subtotal', '\$\${cart.subtotal.toStringAsFixed(2)}'),
         const SizedBox(height: 8),
-        _buildSummaryRow('Delivery fee', '$${cart.deliveryFee.toStringAsFixed(2)}'),
+        _buildSummaryRow('Delivery fee', '\$\${cart.deliveryFee.toStringAsFixed(2)}'),
         const SizedBox(height: 8),
-        _buildSummaryRow('Total', '$${cart.total.toStringAsFixed(2)}', bold: true),
+        _buildSummaryRow('Total', '\$\${cart.total.toStringAsFixed(2)}', bold: true),
         const SizedBox(height: 16),
         Row(
           children: [

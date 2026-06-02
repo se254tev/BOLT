@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../shared/widgets/button_widget.dart';
-import '../../../../core/providers.dart';
+import 'package:bolt_marketplace/shared/widgets/app_button.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:bolt_marketplace/core/providers.dart';
 
 class PendingPaymentsPage extends ConsumerStatefulWidget {
   const PendingPaymentsPage({super.key});
@@ -76,7 +77,8 @@ class _PendingPaymentsPageState extends ConsumerState<PendingPaymentsPage> {
                   Text('Amount: ${o['totalAmount'] ?? o['total'] ?? ''}'),
                   const SizedBox(height: 8),
                   if (o['payment'] != null) Text('Transaction: ${o['payment']['transactionCode'] ?? ''}'),
-                  if (o['payment'] != null && o['payment']['screenshotUrl'] != null) Image.network(o['payment']['screenshotUrl']),
+                  if (o['payment'] != null && o['payment']['screenshotUrl'] != null)
+                    CachedNetworkImage(imageUrl: o['payment']['screenshotUrl'], placeholder: (ctx, _) => Container(height: 120, color: Colors.grey.shade200), errorWidget: (ctx, _, __) => Container(height: 120, color: Colors.grey.shade200, child: const Icon(Icons.broken_image))),
                   const SizedBox(height: 8),
                   Row(children: [
                     AppButton(label: 'Approve', onPressed: () => _approve(id)),

@@ -1,6 +1,6 @@
-import '../../../../core/services/storage_service.dart';
-import '../../domain/entities/user.dart';
-import '../../domain/repositories/auth_repository.dart';
+import 'package:bolt_marketplace/core/services/storage_service.dart';
+import 'package:bolt_marketplace/features/auth/domain/entities/user.dart';
+import 'package:bolt_marketplace/features/auth/domain/repositories/auth_repository.dart';
 import '../datasources/auth_remote_data_source.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -29,12 +29,24 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<User?> getProfile() async {
-    return null;
+    final resp = await remoteDataSource.getProfile();
+    if (resp == null) return null;
+    return resp['user'];
   }
 
   @override
   Future<void> logout() async {
     await remoteDataSource.logout();
     await storageService.delete('jwt_token');
+  }
+
+  @override
+  Future<void> applySeller() async {
+    await remoteDataSource.applySeller();
+  }
+
+  @override
+  Future<void> activateSeller() async {
+    await remoteDataSource.activateSeller();
   }
 }

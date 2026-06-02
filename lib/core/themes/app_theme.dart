@@ -35,7 +35,7 @@ class AppTheme {
       bodySmall: AppTextStyles.caption,
     ),
     appBarTheme: const AppBarTheme(centerTitle: true, elevation: 0, backgroundColor: Colors.transparent, foregroundColor: Colors.black),
-    cardTheme: const CardTheme(color: AppColors.card, elevation: 2, shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12)))),
+    cardTheme: const CardThemeData(color: AppColors.card, elevation: 2, shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12)))),
   );
 
   static final ThemeData dark = ThemeData(
@@ -50,6 +50,6 @@ class AppTheme {
       bodySmall: AppTextStyles.caption,
     ),
     appBarTheme: const AppBarTheme(centerTitle: true),
-    cardTheme: const CardTheme(elevation: 2, shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12)))),
+    cardTheme: const CardThemeData(elevation: 2, shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12)))),
   );
 }

@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../../../../core/constants/api_endpoints.dart';
+import 'package:bolt_marketplace/core/constants/api_endpoints.dart';
 import '../models/user_model.dart';
 
 class AuthRemoteDataSource {
@@ -34,5 +34,26 @@ class AuthRemoteDataSource {
 
   Future<void> logout() async {
     await dio.post('${ApiEndpoints.auth}/logout');
+  }
+
+  Future<Map<String, dynamic>?> getProfile() async {
+    try {
+      final response = await dio.get('${ApiEndpoints.auth}/me');
+      return {
+        'user': UserModel.fromJson(response.data['data']['user']),
+      };
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<Map<String, dynamic>> applySeller() async {
+    final response = await dio.post('/seller/apply');
+    return response.data['data'] ?? {};
+  }
+
+  Future<Map<String, dynamic>> activateSeller() async {
+    final response = await dio.patch('/seller/activate');
+    return response.data['data'] ?? {};
   }
 }

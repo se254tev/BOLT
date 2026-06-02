@@ -16,6 +16,9 @@ router.patch('/products/:action(approve|reject)/:id', adminController.moderatePr
 router.delete('/products/:id', adminController.deleteProduct);
 router.patch('/properties/:action(approve|reject)/:id', adminController.moderateProperty);
 router.delete('/properties/:id', adminController.deleteProperty);
+router.patch('/seller/:id/approve', validateObjectId('id'), adminController.approveSeller);
+router.patch('/seller/:id/reject', validateObjectId('id'), adminController.rejectSeller);
+router.get('/sellers/pending', adminController.listPendingSellers);
 router.patch('/restaurants/verify/:id', adminController.verifyRestaurant);
 router.patch('/restaurants/suspend/:id', adminController.suspendRestaurant);
 router.delete('/meals/:id', adminController.removeMealListing);

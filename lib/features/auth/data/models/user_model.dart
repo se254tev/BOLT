@@ -7,6 +7,7 @@ class UserModel extends User {
     required super.email,
     required super.phone,
     required super.role,
+    super.sellerStatus,
     super.profileImage,
     required super.createdAt,
   });
@@ -18,6 +19,7 @@ class UserModel extends User {
       email: json['email'] ?? '',
       phone: json['phone'] ?? '',
       role: json['role'] ?? 'buyer',
+      sellerStatus: json['sellerStatus'] ?? json['seller_status'] ?? 'none',
       profileImage: json['profileImage'],
       createdAt: DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
     );
@@ -29,6 +31,7 @@ class UserModel extends User {
       'email': email,
       'phone': phone,
       'role': role,
+      'sellerStatus': sellerStatus,
       'profileImage': profileImage,
     };
   }

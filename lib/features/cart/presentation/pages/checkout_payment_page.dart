@@ -4,9 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dio/dio.dart';
-import '../../../../shared/widgets/button_widget.dart';
-import '../providers/checkout_provider.dart';
-import '../../../../core/providers.dart';
+import 'package:bolt_marketplace/shared/widgets/app_button.dart';
+import 'package:bolt_marketplace/shared/widgets/app_input.dart';
+import 'package:bolt_marketplace/core/providers.dart';
 
 class CheckoutPaymentPage extends ConsumerStatefulWidget {
   const CheckoutPaymentPage({super.key});

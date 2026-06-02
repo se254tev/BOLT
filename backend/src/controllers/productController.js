@@ -21,6 +21,10 @@ const createProduct = async (req, res) => {
     const product = await productService.createProduct({ user: req.user, payload: req.validated || req.body });
     res.status(201).json({ product });
   } catch (err) {
+    // authorization errors should be 403
+    if (err.message && (err.message.includes('Only sellers') || err.message.includes('not active') || err.message.includes('Unauthorized'))) {
+      return res.status(403).json({ error: err.message });
+    }
     res.status(400).json({ error: err.message });
   }
 };

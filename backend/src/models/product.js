@@ -13,6 +13,9 @@ const productSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now },
 });
 
+productSchema.index({ sellerId: 1 });
+productSchema.index({ sellerId: 1, verified: 1 });
+
 productSchema.pre('save', function (next) {
   this.updatedAt = Date.now();
   next();

@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
-import '../../../../core/constants/api_endpoints.dart';
-import '../models/cart_item_model.dart';
-import '../models/cart_model.dart';
+import 'package:bolt_marketplace/core/constants/api_endpoints.dart';
+import 'package:bolt_marketplace/features/cart/data/models/cart_item_model.dart';
+import 'package:bolt_marketplace/features/cart/data/models/cart_model.dart';
 
 class CartRemoteDataSource {
   final Dio dio;
@@ -45,7 +45,7 @@ class CartRemoteDataSource {
   }
 
   Future<CartModel> addItem(CartModel? cart, CartItemModel item) async {
-    final currentItems = cart?.items ?? [];
+    final currentItems = cart?.items.whereType<CartItemModel>().toList() ?? [];
     final existingIndex = currentItems.indexWhere((entry) => entry.productId == item.productId);
     final List<CartItemModel> nextItems;
 
@@ -68,6 +68,7 @@ class CartRemoteDataSource {
 
   Future<CartModel> updateQuantity(CartModel cart, String productId, int quantity) async {
     final nextItems = cart.items
+        .whereType<CartItemModel>()
         .map((entry) => entry.productId == productId
             ? CartItemModel(
                 productId: entry.productId,
@@ -84,7 +85,7 @@ class CartRemoteDataSource {
   }
 
   Future<CartModel> removeItem(CartModel cart, String productId) async {
-    final nextItems = cart.items.where((entry) => entry.productId != productId).toList();
+    final nextItems = cart.items.whereType<CartItemModel>().where((entry) => entry.productId != productId).toList();
     return _saveCart(cartId: cart.id, items: nextItems, paymentStatus: cart.paymentStatus);
   }
 
@@ -100,7 +101,8 @@ class CartRemoteDataSource {
   Future<void> checkout(String cartId, Map<String, dynamic> checkoutData) async {
     try {
       final payload = Map<String, dynamic>.from(checkoutData);
-      await dio.put('${ApiEndpoints.cart}/$cartId', data: payload);
+      // Create an order on the server instead of updating the cart
+      await dio.post(ApiEndpoints.orders, data: payload);
     } catch (e) {
       rethrow;
     }

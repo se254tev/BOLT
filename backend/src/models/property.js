@@ -26,6 +26,7 @@ const propertySchema = new mongoose.Schema({
   suspended: { type: Boolean, default: false },
 });
 
+propertySchema.index({ agentId: 1 });
 propertySchema.index({ 'location.lat': 1, 'location.lng': 1 });
 
 propertySchema.pre('save', function (next) {

@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:state_notifier/state_notifier.dart';
 import '../../domain/entities/cart.dart';
 import '../../domain/repositories/cart_repository.dart';
 
@@ -18,11 +19,17 @@ class CartController extends StateNotifier<AsyncValue<Cart>> {
     }
   }
 
-  Future<void> addItem(String productId, int quantity) async {
+  Future<void> addItem(String productId, int quantity, {String? productName, double? price, String? image}) async {
     final currentState = state;
     try {
       state = const AsyncValue.loading();
-      final updatedCart = await cartRepository.addItem(productId, quantity);
+      final updatedCart = await cartRepository.addItem(
+        productId,
+        quantity,
+        productName: productName,
+        price: price,
+        image: image,
+      );
       state = AsyncValue.data(updatedCart);
     } catch (err, stack) {
       // Restore previous state on error
@@ -68,6 +75,7 @@ class CartController extends StateNotifier<AsyncValue<Cart>> {
         subtotal: 0,
         deliveryFee: 0,
         total: 0,
+        paymentStatus: 'pending',
       ));
     } catch (err, stack) {
       state = AsyncValue.error(err, stack);

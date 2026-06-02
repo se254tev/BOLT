@@ -10,9 +10,20 @@ const listProducts = async ({ search, category, sellerId, verified }) => {
   return Product.find(filter).lean();
 };
 
-const getProduct = async (id) => Product.findById(id);
+const getProduct = async (id) => {
+  const p = await Product.findById(id).populate('sellerId', 'name -_id').lean();
+  if (!p) return null;
+  const seller = p.sellerId || {};
+  // expose seller id and name only; never expose phone or other private fields
+  p.sellerId = seller._id ? String(seller._id) : (seller.id || undefined);
+  p.sellerName = seller.name || undefined;
+  return p;
+};
 
 const createProduct = async ({ user, payload }) => {
+  // Only active sellers or admin may create products
+  if (user.role !== 'seller' && user.role !== 'admin') throw new Error('Only sellers may create products');
+  if (user.role === 'seller' && user.sellerStatus !== 'active') throw new Error('Seller account not active');
   const product = await Product.create({ ...payload, sellerId: user.id, verified: false });
   await AuditLog.create({ adminId: user.id, action: 'create_product', resource: 'product', resourceId: product.id });
   return product;

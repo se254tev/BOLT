@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../../../../core/constants/api_endpoints.dart';
+import 'package:bolt_marketplace/core/constants/api_endpoints.dart';
 import '../models/product_model.dart';
 
 class ProductRemoteDataSource {

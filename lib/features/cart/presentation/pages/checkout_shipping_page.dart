@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../shared/widgets/button_widget.dart';
-import '../providers/checkout_provider.dart';
+import 'package:bolt_marketplace/shared/widgets/app_button.dart';
+import 'package:bolt_marketplace/features/cart/presentation/providers/checkout_provider.dart';
 
 class CheckoutShippingPage extends ConsumerStatefulWidget {
   const CheckoutShippingPage({super.key});

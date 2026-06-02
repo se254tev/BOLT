@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'network/dio_client.dart';
 import 'services/storage_service.dart';
+import 'realtime/socket_service.dart';
 import '../features/auth/data/datasources/auth_remote_data_source.dart';
 import '../features/auth/data/repositories/auth_repository_impl.dart';
 import '../features/auth/domain/repositories/auth_repository.dart';
@@ -12,6 +13,9 @@ import '../features/cart/data/repositories/cart_repository_impl.dart';
 import '../features/cart/domain/entities/cart.dart';
 import '../features/cart/domain/repositories/cart_repository.dart';
 import '../features/cart/presentation/controllers/cart_controller.dart';
+import '../features/seller/data/datasources/seller_remote_data_source.dart';
+import '../features/seller/data/repositories/seller_repository_impl.dart';
+import '../features/seller/domain/repositories/seller_repository.dart';
 
 final dioClientProvider = Provider<DioClient>((ref) => DioClient());
 final storageServiceProvider = Provider<StorageService>((ref) => StorageService());
@@ -21,6 +25,8 @@ final productRemoteDataSourceProvider = Provider<ProductRemoteDataSource>((ref) 
 final productRepositoryProvider = Provider<ProductRepository>((ref) => ProductRepositoryImpl(remoteDataSource: ref.read(productRemoteDataSourceProvider)));
 final cartRemoteDataSourceProvider = Provider<CartRemoteDataSource>((ref) => CartRemoteDataSource(ref.read(dioClientProvider).dio));
 final cartRepositoryProvider = Provider<CartRepository>((ref) => CartRepositoryImpl(remoteDataSource: ref.read(cartRemoteDataSourceProvider)));
+final sellerRemoteDataSourceProvider = Provider<SellerRemoteDataSource>((ref) => SellerRemoteDataSource(ref.read(dioClientProvider).dio));
+final sellerRepositoryProvider = Provider<SellerRepository>((ref) => SellerRepositoryImpl(remoteDataSource: ref.read(sellerRemoteDataSourceProvider)));
 final cartControllerProvider = StateNotifierProvider<CartController, AsyncValue<Cart>>(
   (ref) => CartController(cartRepository: ref.read(cartRepositoryProvider)),
 );

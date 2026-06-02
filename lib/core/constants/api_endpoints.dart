@@ -24,7 +24,6 @@ class ApiEndpoints {
       case AppEnvironment.staging:
         return 'https://staging.bolt.marketplace.com';
       case AppEnvironment.production:
-      default:
         return 'https://bolt-nv0u.onrender.com';
     }
   }
@@ -37,9 +36,12 @@ class ApiEndpoints {
   static const String reviews = '/api/reviews';
   static const String chat = '/api/chat';
   static const String users = '/api/users';
+  static const String sellerDashboard = '/api/seller/dashboard';
+  static const String orders = '/api/orders';
   static const String restaurants = '/api/restaurants';
   static const String meals = '/api/meals';
   static const String foodOrders = '/api/food-orders';
   static const String agentSubscription = '/api/agents/subscription';
+  static const String services = '/api/services';
 }
 

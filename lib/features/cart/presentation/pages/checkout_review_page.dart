@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/providers.dart';
-import '../../../../shared/widgets/button_widget.dart';
-import '../providers/checkout_provider.dart';
+import 'package:bolt_marketplace/core/providers.dart';
+import 'package:bolt_marketplace/shared/widgets/app_button.dart';
+import 'package:bolt_marketplace/features/cart/presentation/providers/checkout_provider.dart';
 
 class CheckoutReviewPage extends ConsumerStatefulWidget {
   const CheckoutReviewPage({super.key});
@@ -78,16 +78,16 @@ class _CheckoutReviewPageState extends ConsumerState<CheckoutReviewPage> {
                       return ListTile(
                         contentPadding: EdgeInsets.zero,
                         title: Text(item.productName),
-                        subtitle: Text('${item.quantity} × $${item.price.toStringAsFixed(2)}'),
-                        trailing: Text('$${item.subtotal.toStringAsFixed(2)}'),
+                        subtitle: Text('\$\${item.price.toStringAsFixed(2)}'),
+                        trailing: Text('\$\${item.subtotal.toStringAsFixed(2)}'),
                       );
                     },
                   ),
                 ),
                 const Divider(),
-                _summaryRow('Subtotal', '$${cart.subtotal.toStringAsFixed(2)}'),
-                _summaryRow('Delivery', '$${cart.deliveryFee.toStringAsFixed(2)}'),
-                _summaryRow('Total', '$${cart.total.toStringAsFixed(2)}', bold: true),
+                _summaryRow('Subtotal', '\$\${cart.subtotal.toStringAsFixed(2)}'),
+                _summaryRow('Delivery', '\$\${cart.deliveryFee.toStringAsFixed(2)}'),
+                _summaryRow('Total', '\$\${cart.total.toStringAsFixed(2)}', bold: true),
                 const SizedBox(height: 16),
                 AppButton(
                   label: _submitting ? 'Submitting...' : 'Confirm Order',

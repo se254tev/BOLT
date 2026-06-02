@@ -3,9 +3,9 @@
   "packages": [
     {
       "name": "_flutterfire_internals",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/_flutterfire_internals-1.3.35",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/_flutterfire_internals-1.3.72",
       "packageUri": "lib/",
-      "languageVersion": "3.2"
+      "languageVersion": "3.6"
     },
     {
       "name": "args",
@@ -27,19 +27,19 @@
     },
     {
       "name": "cached_network_image",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/cached_network_image-3.3.1",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/cached_network_image-3.4.1",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
     {
       "name": "cached_network_image_platform_interface",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/cached_network_image_platform_interface-4.0.0",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/cached_network_image_platform_interface-4.1.1",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
     {
       "name": "cached_network_image_web",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/cached_network_image_web-1.2.0",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/cached_network_image_web-1.3.1",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -122,6 +122,12 @@
       "languageVersion": "3.7"
     },
     {
+      "name": "ffi_leak_tracker",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/ffi_leak_tracker-0.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.10"
+    },
+    {
       "name": "file",
       "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/file-7.0.1",
       "packageUri": "lib/",
@@ -153,39 +159,45 @@
     },
     {
       "name": "firebase_core",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_core-2.32.0",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_core-4.10.0",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "3.6"
     },
     {
       "name": "firebase_core_platform_interface",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_core_platform_interface-5.4.2",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_core_platform_interface-7.0.1",
       "packageUri": "lib/",
-      "languageVersion": "3.2"
+      "languageVersion": "3.6"
     },
     {
       "name": "firebase_core_web",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_core_web-2.24.0",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_core_web-3.8.0",
       "packageUri": "lib/",
-      "languageVersion": "3.4"
+      "languageVersion": "3.6"
     },
     {
       "name": "firebase_messaging",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_messaging-14.7.10",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_messaging-16.3.0",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "3.6"
     },
     {
       "name": "firebase_messaging_platform_interface",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_messaging_platform_interface-4.5.37",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_messaging_platform_interface-4.8.0",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "3.6"
     },
     {
       "name": "firebase_messaging_web",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_messaging_web-3.5.18",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_messaging_web-4.2.0",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "3.6"
+    },
+    {
+      "name": "fixnum",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/fixnum-1.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
     },
     {
       "name": "flutter",
@@ -195,15 +207,21 @@
     },
     {
       "name": "flutter_cache_manager",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_cache_manager-3.3.1",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_cache_manager-3.4.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "flutter_hooks",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_hooks-0.21.3+1",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "flutter_lints",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_lints-2.0.3",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_lints-6.0.0",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.8"
     },
     {
       "name": "flutter_plugin_android_lifecycle",
@@ -219,39 +237,39 @@
     },
     {
       "name": "flutter_secure_storage",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_secure_storage-9.2.4",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_secure_storage-10.3.1",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "flutter_secure_storage_darwin",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_secure_storage_darwin-0.3.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
     },
     {
       "name": "flutter_secure_storage_linux",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_secure_storage_linux-1.2.3",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_secure_storage_linux-3.0.1",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "flutter_secure_storage_macos",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_secure_storage_macos-3.1.3",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "3.3"
     },
     {
       "name": "flutter_secure_storage_platform_interface",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_secure_storage_platform_interface-1.1.2",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_secure_storage_platform_interface-2.0.1",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "3.3"
     },
     {
       "name": "flutter_secure_storage_web",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_secure_storage_web-1.2.1",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_secure_storage_web-2.1.1",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "3.3"
     },
     {
       "name": "flutter_secure_storage_windows",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_secure_storage_windows-3.1.2",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_secure_storage_windows-4.2.2",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "3.3"
     },
     {
       "name": "flutter_test",
@@ -273,9 +291,15 @@
     },
     {
       "name": "hooks",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/hooks-2.0.0",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/hooks-2.0.2",
       "packageUri": "lib/",
       "languageVersion": "3.10"
+    },
+    {
+      "name": "hooks_riverpod",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/hooks_riverpod-2.6.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
     },
     {
       "name": "http",
@@ -339,9 +363,9 @@
     },
     {
       "name": "intl",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/intl-0.18.1",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/intl-0.20.2",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "3.3"
     },
     {
       "name": "jni",
@@ -354,12 +378,6 @@
       "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/jni_flutter-1.0.1",
       "packageUri": "lib/",
       "languageVersion": "3.3"
-    },
-    {
-      "name": "js",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/js-0.6.7",
-      "packageUri": "lib/",
-      "languageVersion": "2.19"
     },
     {
       "name": "leak_tracker",
@@ -381,9 +399,9 @@
     },
     {
       "name": "lints",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/lints-2.1.1",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/lints-6.1.0",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.8"
     },
     {
       "name": "logging",
@@ -506,8 +524,14 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "riverpod_annotation",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/riverpod_annotation-2.6.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "rxdart",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/rxdart-0.27.7",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/rxdart-0.28.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -525,33 +549,33 @@
     },
     {
       "name": "sqflite",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/sqflite-2.4.2+1",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/sqflite-2.4.3",
       "packageUri": "lib/",
-      "languageVersion": "3.10"
+      "languageVersion": "3.12"
     },
     {
       "name": "sqflite_android",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/sqflite_android-2.4.2+3",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/sqflite_android-2.4.3",
       "packageUri": "lib/",
-      "languageVersion": "3.10"
+      "languageVersion": "3.12"
     },
     {
       "name": "sqflite_common",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/sqflite_common-2.5.8",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/sqflite_common-2.5.9",
       "packageUri": "lib/",
-      "languageVersion": "3.10"
+      "languageVersion": "3.12"
     },
     {
       "name": "sqflite_darwin",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/sqflite_darwin-2.4.2",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/sqflite_darwin-2.4.3",
       "packageUri": "lib/",
-      "languageVersion": "3.7"
+      "languageVersion": "3.12"
     },
     {
       "name": "sqflite_platform_interface",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/sqflite_platform_interface-2.4.0",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/sqflite_platform_interface-2.4.1",
       "packageUri": "lib/",
-      "languageVersion": "3.5"
+      "languageVersion": "3.12"
     },
     {
       "name": "stack_trace",
@@ -579,9 +603,9 @@
     },
     {
       "name": "synchronized",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/synchronized-3.4.0+1",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/synchronized-3.4.1",
       "packageUri": "lib/",
-      "languageVersion": "3.11"
+      "languageVersion": "3.12"
     },
     {
       "name": "term_glyph",
@@ -608,10 +632,58 @@
       "languageVersion": "3.6"
     },
     {
-      "name": "uuid",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/uuid-3.0.7",
+      "name": "url_launcher",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher-6.3.2",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "3.6"
+    },
+    {
+      "name": "url_launcher_android",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_android-6.3.30",
+      "packageUri": "lib/",
+      "languageVersion": "3.10"
+    },
+    {
+      "name": "url_launcher_ios",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_ios-6.4.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.10"
+    },
+    {
+      "name": "url_launcher_linux",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_linux-3.2.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.8"
+    },
+    {
+      "name": "url_launcher_macos",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_macos-3.2.5",
+      "packageUri": "lib/",
+      "languageVersion": "3.9"
+    },
+    {
+      "name": "url_launcher_platform_interface",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_platform_interface-2.3.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
+      "name": "url_launcher_web",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_web-2.4.3",
+      "packageUri": "lib/",
+      "languageVersion": "3.10"
+    },
+    {
+      "name": "url_launcher_windows",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_windows-3.1.5",
+      "packageUri": "lib/",
+      "languageVersion": "3.8"
+    },
+    {
+      "name": "uuid",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/uuid-4.5.3",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
     },
     {
       "name": "vector_math",
@@ -633,9 +705,9 @@
     },
     {
       "name": "win32",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/win32-5.15.0",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/win32-6.3.0",
       "packageUri": "lib/",
-      "languageVersion": "3.8"
+      "languageVersion": "3.10"
     },
     {
       "name": "xdg_directories",

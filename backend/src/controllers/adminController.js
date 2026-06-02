@@ -181,6 +181,68 @@ module.exports = {
     await audit({ adminId: req.user.id, action: 'verify_restaurant', resource: 'restaurant', resourceId: id, ipAddress: req.ip, userAgent: req.get('User-Agent') });
     res.json({ message: 'Restaurant verified' });
   },
+  approveSeller: async (req, res) => {
+    try {
+      const id = req.params.id;
+      const User = require('../models/user');
+      const user = await User.findById(id);
+      if (!user) return res.status(404).json({ error: 'User not found' });
+      if (user.sellerStatus === 'active' || user.sellerStatus === 'approved') {
+        return res.status(400).json({ error: 'Seller application is already approved or active' });
+      }
+      if (user.sellerStatus !== 'pending' && user.sellerStatus !== 'rejected') {
+        return res.status(400).json({ error: 'Seller application must be pending or rejected to approve' });
+      }
+      user.sellerStatus = 'approved';
+      user.approvedAt = new Date();
+      user.approvedBy = req.user.id;
+      user.sellerApplication = user.sellerApplication || {};
+      user.sellerApplication.reviewedAt = new Date();
+      user.sellerApplication.reviewedBy = req.user.id;
+      await user.save();
+      await AuditLog.create({ adminId: req.user.id, action: 'approve_seller', resource: 'user', resourceId: id });
+      res.json({ sellerStatus: user.sellerStatus });
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
+  },
+  listPendingSellers: async (req, res) => {
+    try {
+      const User = require('../models/user');
+      const list = await User.find({ sellerStatus: 'pending' }).select('-password -mfaSecret -mfaTempSecret -refreshTokens').lean();
+      await audit({ adminId: req.user.id, action: 'list_pending_sellers', resource: 'user', ipAddress: req.ip, userAgent: req.get('User-Agent') });
+      res.json({ sellers: list });
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
+  },
+  rejectSeller: async (req, res) => {
+    try {
+      const id = req.params.id;
+      const { rejectionReason } = req.body;
+      const User = require('../models/user');
+      const user = await User.findById(id);
+      if (!user) return res.status(404).json({ error: 'User not found' });
+      if (user.sellerStatus === 'active') {
+        return res.status(400).json({ error: 'Active seller accounts cannot be rejected' });
+      }
+      if (user.sellerStatus !== 'pending' && user.sellerStatus !== 'approved' && user.sellerStatus !== 'rejected') {
+        return res.status(400).json({ error: 'Seller application must be pending, approved, or rejected to reject' });
+      }
+      user.sellerStatus = 'rejected';
+      user.rejectedAt = new Date();
+      user.rejectionReason = rejectionReason || 'Rejected by admin';
+      user.sellerApplication = user.sellerApplication || {};
+      user.sellerApplication.reviewedAt = new Date();
+      user.sellerApplication.reviewedBy = req.user.id;
+      user.sellerApplication.rejectionReason = user.rejectionReason;
+      await user.save();
+      await AuditLog.create({ adminId: req.user.id, action: 'reject_seller', resource: 'user', resourceId: id, metadata: { rejectionReason: user.rejectionReason } });
+      res.json({ sellerStatus: user.sellerStatus, rejectionReason: user.rejectionReason });
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
+  },
   suspendRestaurant: async (req, res) => {
     const id = req.params.id;
     const Restaurant = require('../models/restaurant');

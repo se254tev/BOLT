@@ -4,6 +4,7 @@ const { requireController } = require('../utils/requireController');
 const sanitize = require('../middleware/sanitize');
 const authenticate = require('../middleware/authenticate');
 const { generalLimiter, sellerLimiter } = require('../middleware/rateLimit');
+const authorizeSeller = require('../middleware/authorizeSeller');
 const validateRequest = require('../middleware/validate');
 const { productSchema } = require('../schemas/product');
 const validateObjectId = require('../middleware/validateObjectId');
@@ -14,8 +15,8 @@ router.use(generalLimiter);
 
 router.get('/', authenticate, productController.listProducts);
 router.get('/:id', authenticate, validateObjectId('id'), productController.getProduct);
-router.post('/', authenticate, sellerLimiter, validateRequest(productSchema), productController.createProduct);
-router.put('/:id', authenticate, sellerLimiter, validateObjectId('id'), validateRequest(productSchema), productController.updateProduct);
-router.delete('/:id', authenticate, sellerLimiter, validateObjectId('id'), productController.deleteProduct);
+router.post('/', authenticate, authorizeSeller(), sellerLimiter, validateRequest(productSchema), productController.createProduct);
+router.put('/:id', authenticate, authorizeSeller(), sellerLimiter, validateObjectId('id'), validateRequest(productSchema), productController.updateProduct);
+router.delete('/:id', authenticate, authorizeSeller(), sellerLimiter, validateObjectId('id'), productController.deleteProduct);
 
 module.exports = router;

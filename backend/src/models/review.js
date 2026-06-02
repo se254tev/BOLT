@@ -9,6 +9,8 @@ const reviewSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now },
 });
 
+reviewSchema.index({ productId: 1 });
+
 reviewSchema.pre('save', function (next) {
   this.updatedAt = Date.now();
   next();

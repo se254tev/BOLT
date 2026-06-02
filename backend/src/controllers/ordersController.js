@@ -1,4 +1,5 @@
 const paymentService = require('../services/paymentService');
+const ordersService = require('../services/ordersService');
 
 const submitPaymentProof = async (req, res) => {
   try {
@@ -41,4 +42,14 @@ const listPendingForSeller = async (req, res) => {
   }
 };
 
-module.exports = { submitPaymentProof, approvePayment, rejectPayment };
+const createOrder = async (req, res) => {
+  try {
+    const payload = req.validated || req.body;
+    const order = await ordersService.createOrder({ user: req.user, payload });
+    res.status(201).json({ order });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+module.exports = { submitPaymentProof, approvePayment, rejectPayment, createOrder };

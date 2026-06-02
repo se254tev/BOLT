@@ -4,6 +4,7 @@ class User {
   final String email;
   final String phone;
   final String role;
+  final String? sellerStatus;
   final String? profileImage;
   final DateTime createdAt;
 
@@ -13,6 +14,7 @@ class User {
     required this.email,
     required this.phone,
     required this.role,
+    this.sellerStatus,
     this.profileImage,
     required this.createdAt,
   });

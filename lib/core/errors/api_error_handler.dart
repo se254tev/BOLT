@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+
 /// Centralized API Error Model for Flutter
 /// Maps backend error codes to user-friendly messages
 

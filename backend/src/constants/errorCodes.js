@@ -184,6 +184,36 @@ const ERRORS = {
     httpStatus: 403,
     message: 'Unauthorized to access this order',
   },
+  SERVICE_REQUEST_NOT_FOUND: {
+    code: 'SERVICE_REQUEST_NOT_FOUND',
+    httpStatus: 404,
+    message: 'Service request not found',
+  },
+  NOT_A_REGISTERED_WORKER: {
+    code: 'NOT_A_REGISTERED_WORKER',
+    httpStatus: 403,
+    message: 'Worker profile required to perform this action',
+  },
+  BID_NOT_FOUND: {
+    code: 'BID_NOT_FOUND',
+    httpStatus: 404,
+    message: 'Bid not found',
+  },
+  INVALID_REQUEST_STATE_TRANSITION: {
+    code: 'INVALID_REQUEST_STATE_TRANSITION',
+    httpStatus: 400,
+    message: 'Invalid service request state transition',
+  },
+  INVALID_BID_ACTION: {
+    code: 'INVALID_BID_ACTION',
+    httpStatus: 400,
+    message: 'Invalid bid action for this request',
+  },
+  REQUEST_FORBIDDEN: {
+    code: 'REQUEST_FORBIDDEN',
+    httpStatus: 403,
+    message: 'Unauthorized to access this request',
+  },
   DROPOFF_LOCATION_REQUIRED: {
     code: 'DROPOFF_LOCATION_REQUIRED',
     httpStatus: 400,

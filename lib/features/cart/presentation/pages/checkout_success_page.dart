@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../shared/widgets/button_widget.dart';
+import 'package:bolt_marketplace/shared/widgets/app_button.dart';
 
 class CheckoutSuccessPage extends StatelessWidget {
   const CheckoutSuccessPage({super.key});

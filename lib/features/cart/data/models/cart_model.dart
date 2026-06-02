@@ -46,7 +46,7 @@ class CartModel extends Cart {
   Map<String, dynamic> toJson() => {
     '_id': id,
     'userId': userId,
-    'items': (items as List<CartItemModel>).map((item) => item.toJson()).toList(),
+    'items': items.map((item) => item.toJson()).toList(),
     'subtotal': subtotal,
     'deliveryFee': deliveryFee,
     'total': total,

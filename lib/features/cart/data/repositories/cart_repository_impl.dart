@@ -1,6 +1,5 @@
 import '../datasources/cart_remote_data_source.dart';
 import '../models/cart_item_model.dart';
-import '../models/cart_model.dart';
 import '../../domain/entities/cart.dart';
 import '../../domain/repositories/cart_repository.dart';
 
