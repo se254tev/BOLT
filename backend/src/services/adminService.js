@@ -19,7 +19,14 @@ const getAnalytics = async () => {
   ]);
 
   const revenue = revenueResult.length ? revenueResult[0].revenue : 0;
-  return { totalUsers, totalSellers, totalProducts, totalProperties, totalOrders, revenue };
+  return {
+    users: totalUsers,
+    sellers: totalSellers,
+    products: totalProducts,
+    properties: totalProperties,
+    orders: totalOrders,
+    revenue,
+  };
 };
 
 const moderateProduct = async ({ id, action }) => {

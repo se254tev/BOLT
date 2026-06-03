@@ -2,6 +2,16 @@ import { NavLink } from 'react-router-dom';
 
 const links = [
   { label: 'Dashboard', path: '/' },
+  { label: 'Restaurants', path: '/restaurants' },
+  { label: 'Sellers', path: '/sellers' },
+  { label: 'Delivery Agents', path: '/delivery-agents' },
+  { label: 'Boost Requests', path: '/boost-requests' },
+  { label: 'Subscriptions', path: '/subscriptions' },
+  { label: 'Service Requests', path: '/service-requests' },
+  { label: 'Workers', path: '/workers' },
+  { label: 'Bids', path: '/bids' },
+  { label: 'Service Reviews', path: '/service-reviews' },
+  { label: 'Audit Logs', path: '/audit-logs' },
   { label: 'Products', path: '/products' },
   { label: 'Properties', path: '/properties' },
   { label: 'Users', path: '/users' },

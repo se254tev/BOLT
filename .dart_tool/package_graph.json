@@ -22,6 +22,7 @@
         "intl",
         "riverpod",
         "riverpod_annotation",
+        "socket_io_client",
         "state_notifier",
         "url_launcher",
         "uuid"
@@ -1097,6 +1098,29 @@
         "collection",
         "meta",
         "pub_semver"
+      ]
+    },
+    {
+      "name": "socket_io_client",
+      "version": "2.0.3+1",
+      "dependencies": [
+        "js",
+        "logging",
+        "socket_io_common"
+      ]
+    },
+    {
+      "name": "socket_io_common",
+      "version": "2.0.3",
+      "dependencies": [
+        "logging"
+      ]
+    },
+    {
+      "name": "js",
+      "version": "0.6.7",
+      "dependencies": [
+        "meta"
       ]
     }
   ],

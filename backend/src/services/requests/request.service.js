@@ -62,6 +62,7 @@ const createRequest = async ({ user, payload }) => {
   const workerRole = requestType === REQUEST_TYPES.RIDE_REQUEST ? WORKER_ROLES.RIDER : WORKER_ROLES.SHOPPER;
   await broadcastRequest(serviceRequest, workerRole);
   emitToUser(user.id || user._id, 'request_created', { requestId: serviceRequest._id, requestState: serviceRequest.requestState });
+  emitToAdmins('request_created', { requestId: serviceRequest._id, requestState: serviceRequest.requestState, requestType: serviceRequest.requestType });
 
   return serviceRequest;
 };
@@ -142,6 +143,7 @@ const createReview = async ({ user, payload }) => {
     requestId: serviceRequest._id,
     reviewId: review._id,
   });
+  emitToAdmins('request_completed', { requestId: serviceRequest._id, assignmentId: assignment._id, reviewId: review._id });
 
   const worker = await ServiceWorker.findById(assignment.workerId);
   await Notification.create({

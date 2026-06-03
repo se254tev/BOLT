@@ -1,5 +1,9 @@
 const adminService = require('../services/adminService');
 const AuditLog = require('../models/auditLog');
+const Category = require('../models/category');
+const Ad = require('../models/ad');
+const Restaurant = require('../models/restaurant');
+const { ServiceRequest, ServiceWorker, ServiceBid, ServiceReview } = require('../services/requests/models');
 
 const audit = async ({ adminId, action, resource, resourceId, ipAddress, userAgent }) => {
   await AuditLog.create({ adminId, action, resource, resourceId, ipAddress, userAgent });
@@ -9,6 +13,18 @@ const getAnalytics = async (req, res) => {
   const stats = await adminService.getAnalytics();
   await audit({ adminId: req.user.id, action: 'view_analytics', resource: 'analytics', ipAddress: req.ip, userAgent: req.get('User-Agent') });
   res.json({ stats });
+};
+
+const listCategories = async (req, res) => {
+  const categories = await Category.find().lean();
+  await audit({ adminId: req.user.id, action: 'list_categories', resource: 'category', ipAddress: req.ip, userAgent: req.get('User-Agent') });
+  res.json({ categories });
+};
+
+const listAds = async (req, res) => {
+  const ads = await Ad.find().lean();
+  await audit({ adminId: req.user.id, action: 'list_ads', resource: 'advertisement', ipAddress: req.ip, userAgent: req.get('User-Agent') });
+  res.json({ ads });
 };
 
 const moderateProduct = async (req, res) => {
@@ -64,13 +80,69 @@ const deleteReview = async (req, res) => {
 };
 
 const manageCategory = async (req, res) => {
-  await audit({ adminId: req.user.id, action: `category_${req.params.action}`, resource: 'category', resourceId: req.params.id || null, ipAddress: req.ip, userAgent: req.get('User-Agent') });
-  res.json({ message: `Category ${req.params.action}` });
+  const { action } = req.params;
+  const { name } = req.body;
+
+  if (action !== 'delete' && !name) {
+    return res.status(400).json({ error: 'Category name is required' });
+  }
+
+  let category;
+  if (action === 'create') {
+    category = await Category.create({ name });
+    await audit({ adminId: req.user.id, action: 'create_category', resource: 'category', resourceId: category.id, ipAddress: req.ip, userAgent: req.get('User-Agent') });
+    return res.status(201).json({ category });
+  }
+
+  if (action === 'update') {
+    category = await Category.findByIdAndUpdate(req.params.id, { name }, { new: true });
+    if (!category) return res.status(404).json({ error: 'Category not found' });
+    await audit({ adminId: req.user.id, action: 'update_category', resource: 'category', resourceId: category.id, ipAddress: req.ip, userAgent: req.get('User-Agent') });
+    return res.json({ category });
+  }
+
+  if (action === 'delete') {
+    category = await Category.findById(req.params.id);
+    if (!category) return res.status(404).json({ error: 'Category not found' });
+    await Category.deleteOne({ _id: req.params.id });
+    await audit({ adminId: req.user.id, action: 'delete_category', resource: 'category', resourceId: req.params.id, ipAddress: req.ip, userAgent: req.get('User-Agent') });
+    return res.json({ message: 'Category deleted' });
+  }
+
+  res.status(400).json({ error: 'Invalid category action' });
 };
 
 const manageAds = async (req, res) => {
-  await audit({ adminId: req.user.id, action: `ad_${req.params.action}`, resource: 'advertisement', resourceId: req.params.id || null, ipAddress: req.ip, userAgent: req.get('User-Agent') });
-  res.json({ message: `Advertisement ${req.params.action}` });
+  const { action } = req.params;
+  const { title, slot, imageUrl, link } = req.body;
+
+  if (action !== 'delete' && !title) {
+    return res.status(400).json({ error: 'Ad title is required' });
+  }
+
+  let ad;
+  if (action === 'create') {
+    ad = await Ad.create({ title, slot, imageUrl, link });
+    await audit({ adminId: req.user.id, action: 'create_ad', resource: 'advertisement', resourceId: ad.id, ipAddress: req.ip, userAgent: req.get('User-Agent') });
+    return res.status(201).json({ ad });
+  }
+
+  if (action === 'update') {
+    ad = await Ad.findByIdAndUpdate(req.params.id, { title, slot, imageUrl, link }, { new: true });
+    if (!ad) return res.status(404).json({ error: 'Ad not found' });
+    await audit({ adminId: req.user.id, action: 'update_ad', resource: 'advertisement', resourceId: ad.id, ipAddress: req.ip, userAgent: req.get('User-Agent') });
+    return res.json({ ad });
+  }
+
+  if (action === 'delete') {
+    ad = await Ad.findById(req.params.id);
+    if (!ad) return res.status(404).json({ error: 'Ad not found' });
+    await Ad.deleteOne({ _id: req.params.id });
+    await audit({ adminId: req.user.id, action: 'delete_ad', resource: 'advertisement', resourceId: req.params.id, ipAddress: req.ip, userAgent: req.get('User-Agent') });
+    return res.json({ message: 'Advertisement deleted' });
+  }
+
+  res.status(400).json({ error: 'Invalid advertisement action' });
 };
 
 const platformSettings = async (req, res) => {
@@ -180,6 +252,147 @@ module.exports = {
     await restaurant.save();
     await audit({ adminId: req.user.id, action: 'verify_restaurant', resource: 'restaurant', resourceId: id, ipAddress: req.ip, userAgent: req.get('User-Agent') });
     res.json({ message: 'Restaurant verified' });
+  },
+  listRestaurants: async (req, res) => {
+    const query = {};
+    if (req.query.verified) {
+      query.isVerified = req.query.verified === 'true';
+    }
+    if (req.query.search) {
+      query.$or = [
+        { name: new RegExp(req.query.search, 'i') },
+        { description: new RegExp(req.query.search, 'i') },
+      ];
+    }
+    const restaurants = await Restaurant.find(query).lean();
+    await audit({ adminId: req.user.id, action: 'list_restaurants', resource: 'restaurant', ipAddress: req.ip, userAgent: req.get('User-Agent') });
+    res.json({ restaurants });
+  },
+  getRestaurant: async (req, res) => {
+    const id = req.params.id;
+    const restaurant = await Restaurant.findById(id).lean();
+    if (!restaurant) return res.status(404).json({ error: 'Restaurant not found' });
+    await audit({ adminId: req.user.id, action: 'view_restaurant', resource: 'restaurant', resourceId: id, ipAddress: req.ip, userAgent: req.get('User-Agent') });
+    res.json({ restaurant });
+  },
+  listServiceRequests: async (req, res) => {
+    const query = {};
+    if (req.query.status) query.requestState = req.query.status;
+    if (req.query.type) query.requestType = req.query.type;
+    if (req.query.search) {
+      query.$or = [
+        { _id: req.query.search },
+        { 'rideDetails.pickupLocation': new RegExp(req.query.search, 'i') },
+        { 'rideDetails.destination': new RegExp(req.query.search, 'i') },
+        { 'errandDetails.taskDescription': new RegExp(req.query.search, 'i') },
+      ];
+    }
+    const requests = await ServiceRequest.find(query)
+      .populate('userId', 'name email')
+      .populate('assignedWorkerId', 'userId role serviceType')
+      .lean();
+    await audit({ adminId: req.user.id, action: 'list_service_requests', resource: 'service_request', ipAddress: req.ip, userAgent: req.get('User-Agent') });
+    res.json({ requests });
+  },
+  getServiceRequest: async (req, res) => {
+    const id = req.params.id;
+    const request = await ServiceRequest.findById(id)
+      .populate('userId', 'name email')
+      .populate('assignedWorkerId', 'userId role serviceType')
+      .populate('selectedBidId')
+      .lean();
+    if (!request) return res.status(404).json({ error: 'Service request not found' });
+    await audit({ adminId: req.user.id, action: 'view_service_request', resource: 'service_request', resourceId: id, ipAddress: req.ip, userAgent: req.get('User-Agent') });
+    res.json({ request });
+  },
+  listServiceWorkers: async (req, res) => {
+    const workers = await ServiceWorker.find().populate('userId', 'name email').lean();
+    await audit({ adminId: req.user.id, action: 'list_service_workers', resource: 'service_worker', ipAddress: req.ip, userAgent: req.get('User-Agent') });
+    res.json({ workers });
+  },
+  approveServiceWorker: async (req, res) => {
+    const id = req.params.id;
+    const worker = await ServiceWorker.findById(id);
+    if (!worker) return res.status(404).json({ error: 'Worker not found' });
+    worker.isVerified = true;
+    worker.verificationStatus = 'approved';
+    await worker.save();
+    await audit({ adminId: req.user.id, action: 'approve_service_worker', resource: 'service_worker', resourceId: id, ipAddress: req.ip, userAgent: req.get('User-Agent') });
+    res.json({ worker });
+  },
+  rejectServiceWorker: async (req, res) => {
+    const id = req.params.id;
+    const worker = await ServiceWorker.findById(id);
+    if (!worker) return res.status(404).json({ error: 'Worker not found' });
+    worker.isVerified = false;
+    worker.verificationStatus = 'rejected';
+    await worker.save();
+    await audit({ adminId: req.user.id, action: 'reject_service_worker', resource: 'service_worker', resourceId: id, ipAddress: req.ip, userAgent: req.get('User-Agent') });
+    res.json({ worker });
+  },
+  updateServiceWorkerStatus: async (req, res) => {
+    const id = req.params.id;
+    const { status } = req.body;
+    const worker = await ServiceWorker.findById(id);
+    if (!worker) return res.status(404).json({ error: 'Worker not found' });
+    worker.availabilityStatus = status;
+    await worker.save();
+    await audit({ adminId: req.user.id, action: 'update_service_worker_status', resource: 'service_worker', resourceId: id, ipAddress: req.ip, userAgent: req.get('User-Agent') });
+    res.json({ worker });
+  },
+  listServiceBids: async (req, res) => {
+    const query = {};
+    if (req.query.requestId) query.requestId = req.query.requestId;
+    if (req.query.status) query.status = req.query.status;
+    const bids = await ServiceBid.find(query).lean();
+    await audit({ adminId: req.user.id, action: 'list_service_bids', resource: 'service_bid', ipAddress: req.ip, userAgent: req.get('User-Agent') });
+    res.json({ bids });
+  },
+  listServiceReviews: async (req, res) => {
+    const query = {};
+    if (req.query.requestId) query.requestId = req.query.requestId;
+    if (req.query.workerId) query.workerId = req.query.workerId;
+    const reviews = await ServiceReview.find(query)
+      .populate('userId', 'name email')
+      .populate('workerId', 'serviceType')
+      .lean();
+    await audit({ adminId: req.user.id, action: 'list_service_reviews', resource: 'service_review', ipAddress: req.ip, userAgent: req.get('User-Agent') });
+    res.json({ reviews });
+  },
+  hideServiceReview: async (req, res) => {
+    const id = req.params.id;
+    const review = await ServiceReview.findById(id);
+    if (!review) return res.status(404).json({ error: 'Review not found' });
+    review.isHidden = true;
+    await review.save();
+    await audit({ adminId: req.user.id, action: 'hide_service_review', resource: 'service_review', resourceId: id, ipAddress: req.ip, userAgent: req.get('User-Agent') });
+    res.json({ review });
+  },
+  flagServiceReview: async (req, res) => {
+    const id = req.params.id;
+    const review = await ServiceReview.findById(id);
+    if (!review) return res.status(404).json({ error: 'Review not found' });
+    review.flagged = true;
+    review.flaggedReason = req.body.reason || 'Flagged by admin';
+    await review.save();
+    await audit({ adminId: req.user.id, action: 'flag_service_review', resource: 'service_review', resourceId: id, ipAddress: req.ip, userAgent: req.get('User-Agent') });
+    res.json({ review });
+  },
+  deleteServiceReview: async (req, res) => {
+    const id = req.params.id;
+    const review = await ServiceReview.findById(id);
+    if (!review) return res.status(404).json({ error: 'Review not found' });
+    await ServiceReview.deleteOne({ _id: id });
+    await audit({ adminId: req.user.id, action: 'delete_service_review', resource: 'service_review', resourceId: id, ipAddress: req.ip, userAgent: req.get('User-Agent') });
+    res.status(204).send();
+  },
+  listAuditLogs: async (req, res) => {
+    const query = {};
+    if (req.query.adminId) query.adminId = req.query.adminId;
+    if (req.query.action) query.action = req.query.action;
+    if (req.query.resource) query.resource = req.query.resource;
+    const logs = await AuditLog.find(query).sort({ timestamp: -1 }).limit(200).lean();
+    res.json({ logs });
   },
   approveSeller: async (req, res) => {
     try {

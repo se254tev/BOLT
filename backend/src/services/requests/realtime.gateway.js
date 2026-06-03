@@ -20,7 +20,10 @@ const initRealtimeGateway = (server) => {
       if (userId) socket.join(`user:${userId}`);
       if (workerId) socket.join(`worker:${workerId}`);
       if (requestId) socket.join(`request:${requestId}`);
-      if (role) socket.join(`worker:role:${role}`);
+      if (role) {
+        socket.join(`worker:role:${role}`);
+        if (role === 'admin') socket.join('admin');
+      }
       socket.emit('connected', { message: 'Realtime service gateway connected' });
     });
 
@@ -51,6 +54,7 @@ const emitToUser = (userId, event, payload) => emitToRoom(`user:${userId}`, even
 const emitToWorker = (workerId, event, payload) => emitToRoom(`worker:${workerId}`, event, payload);
 const emitToWorkerRole = (role, event, payload) => emitToRoom(`worker:role:${role}`, event, payload);
 const emitToRequestRoom = (requestId, event, payload) => emitToRoom(`request:${requestId}`, event, payload);
+const emitToAdmins = (event, payload) => emitToRoom('admin', event, payload);
 
 module.exports = {
   initRealtimeGateway,
@@ -59,4 +63,5 @@ module.exports = {
   emitToWorker,
   emitToWorkerRole,
   emitToRequestRoom,
+  emitToAdmins,
 };

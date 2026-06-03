@@ -14,8 +14,8 @@ const CategoriesPage = () => {
   const fetchCategories = async () => {
     setLoading(true);
     try {
-      const res = await api.get('/categories');
-      setCategories(res.data?.categories || res.data || []);
+      const res = await api.get('/admin/categories');
+      setCategories(res.data?.categories || []);
     } catch (err) {
       notifyToast('Failed to load categories');
     } finally {

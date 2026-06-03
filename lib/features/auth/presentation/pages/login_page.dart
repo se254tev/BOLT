@@ -5,8 +5,8 @@ import 'package:bolt_marketplace/core/constants/app_strings.dart';
 import 'package:bolt_marketplace/features/auth/domain/entities/user.dart';
 import 'package:bolt_marketplace/core/navigation/app_router_controller.dart';
 import 'package:bolt_marketplace/features/auth/presentation/controllers/auth_controller.dart';
+import 'package:bolt_marketplace/core/utils/validators.dart';
 import 'package:bolt_marketplace/shared/widgets/card_widget.dart';
-import 'package:bolt_marketplace/shared/widgets/app_input.dart';
 import 'package:bolt_marketplace/shared/widgets/app_button.dart';
 import 'package:bolt_marketplace/shared/widgets/loading_widget.dart';
 
@@ -60,9 +60,19 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    AppInput(label: AppStrings.email, controller: _emailController),
+                    TextFormField(
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: const InputDecoration(labelText: AppStrings.email),
+                      validator: validateEmail,
+                    ),
                     const SizedBox(height: 12),
-                    AppInput(label: AppStrings.password, controller: _passwordController, obscure: true),
+                    TextFormField(
+                      controller: _passwordController,
+                      obscureText: true,
+                      decoration: const InputDecoration(labelText: AppStrings.password),
+                      validator: validatePassword,
+                    ),
                     const SizedBox(height: 20),
                     authState is AsyncLoading
                         ? const LoadingIndicator()

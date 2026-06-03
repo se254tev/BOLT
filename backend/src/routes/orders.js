@@ -5,6 +5,7 @@ const validateObjectId = require('../middleware/validateObjectId');
 const validateRequest = require('../middleware/validate');
 const { orderSchema } = require('../schemas/order');
 const ordersController = require('../controllers/ordersController');
+console.log('ordersController:', ordersController);
 const authorizeSeller = require('../middleware/authorizeSeller');
 
 // Buyer submits payment proof

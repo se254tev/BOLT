@@ -4,6 +4,7 @@ const {
   emitToUser,
   emitToWorker,
   emitToRequestRoom,
+  emitToAdmins,
 } = require('./realtime.gateway');
 const Notification = require('../../models/notification');
 const ERRORS = require('../../constants/errorCodes');
@@ -53,6 +54,7 @@ const createBid = async ({ user, payload }) => {
     requestId: serviceRequest._id,
     bidId: bid._id,
   });
+  emitToAdmins('bid_submitted', { requestId: serviceRequest._id, bidId: bid._id, price: bid.price, workerId: worker._id });
 
   await Notification.create({
     userId: serviceRequest.userId,
@@ -126,6 +128,7 @@ const selectBid = async ({ user, payload }) => {
     assignmentId: assignment._id,
     workerId: bid.workerId,
   });
+  emitToAdmins('request_assigned', { requestId: serviceRequest._id, assignmentId: assignment._id, workerId: bid.workerId });
 
   await Notification.create({
     userId: bid.userId,

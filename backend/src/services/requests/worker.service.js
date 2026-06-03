@@ -1,4 +1,5 @@
 const { ServiceWorker } = require('./models');
+const { emitToAdmins } = require('./realtime.gateway');
 const ERRORS = require('../../constants/errorCodes');
 const { createError } = require('../../utils/appError');
 
@@ -21,6 +22,12 @@ const registerWorker = async ({ user, payload }) => {
     await worker.save();
   } else {
     worker = await ServiceWorker.create(workerData);
+    emitToAdmins('worker_registered', {
+      workerId: worker._id,
+      userId: worker.userId,
+      role: worker.role,
+      serviceType: worker.serviceType,
+    });
   }
 
   return worker;

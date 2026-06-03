@@ -12,8 +12,8 @@ const AdsPage = () => {
   const fetchAds = async () => {
     setLoading(true);
     try {
-      const res = await api.get('/ads');
-      setAds(res.data?.ads || res.data || []);
+      const res = await api.get('/admin/ads');
+      setAds(res.data?.ads || []);
     } catch (err) {
       notifyToast('Failed to load ads');
     } finally {

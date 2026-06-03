@@ -55,19 +55,21 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
               TextFormField(
                 controller: _nameController,
                 decoration: const InputDecoration(labelText: AppStrings.name),
-                validator: (value) => value == null || value.isEmpty ? 'Enter your full name' : null,
+                validator: validateName,
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: _emailController,
                 decoration: const InputDecoration(labelText: AppStrings.email),
-                validator: (value) => value == null || !Validators.isValidEmail(value) ? 'Enter a valid email' : null,
+                keyboardType: TextInputType.emailAddress,
+                validator: validateEmail,
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: _phoneController,
                 decoration: const InputDecoration(labelText: AppStrings.phone),
-                validator: (value) => value == null || value.length < 8 ? 'Enter a phone number' : null,
+                keyboardType: TextInputType.phone,
+                validator: validatePhone,
               ),
               const SizedBox(height: 12),
               DropdownButtonFormField<String>(
@@ -88,7 +90,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                 controller: _passwordController,
                 obscureText: true,
                 decoration: const InputDecoration(labelText: AppStrings.password),
-                validator: (value) => value == null || !Validators.isValidPassword(value) ? 'Password must be 8+ chars' : null,
+                validator: validatePassword,
               ),
               const SizedBox(height: 24),
               ElevatedButton(onPressed: _onRegister, child: const Text('Register')),

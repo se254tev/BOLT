@@ -7,6 +7,8 @@ const serviceWorkerSchema = new mongoose.Schema({
   profileImage: { type: String },
   serviceType: { type: String, required: true },
   legalDocumentUrl: { type: String },
+  isVerified: { type: Boolean, default: false },
+  verificationStatus: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },
   minPrice: { type: Number, default: 0 },
   maxPrice: { type: Number, default: 0 },
   availabilityStatus: { type: String, enum: ['AVAILABLE', 'UNAVAILABLE', 'BUSY'], default: 'AVAILABLE' },

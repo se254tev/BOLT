@@ -52,4 +52,4 @@ const createOrder = async (req, res) => {
   }
 };
 
-module.exports = { submitPaymentProof, approvePayment, rejectPayment, createOrder };
+module.exports = { submitPaymentProof, approvePayment, rejectPayment, listPendingForSeller, createOrder };
