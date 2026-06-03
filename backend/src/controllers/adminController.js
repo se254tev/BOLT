@@ -16,15 +16,23 @@ const getAnalytics = async (req, res) => {
 };
 
 const listCategories = async (req, res) => {
-  const categories = await Category.find().lean();
-  await audit({ adminId: req.user.id, action: 'list_categories', resource: 'category', ipAddress: req.ip, userAgent: req.get('User-Agent') });
-  res.json({ categories });
+  try {
+    const categories = await Category.find().lean();
+    await audit({ adminId: req.user.id, action: 'list_categories', resource: 'category', ipAddress: req.ip, userAgent: req.get('User-Agent') });
+    res.json({ categories });
+  } catch (err) {
+    res.status(500).json({ error: err.message || 'Failed to list categories' });
+  }
 };
 
 const listAds = async (req, res) => {
-  const ads = await Ad.find().lean();
-  await audit({ adminId: req.user.id, action: 'list_ads', resource: 'advertisement', ipAddress: req.ip, userAgent: req.get('User-Agent') });
-  res.json({ ads });
+  try {
+    const ads = await Ad.find().lean();
+    await audit({ adminId: req.user.id, action: 'list_ads', resource: 'advertisement', ipAddress: req.ip, userAgent: req.get('User-Agent') });
+    res.json({ ads });
+  } catch (err) {
+    res.status(500).json({ error: err.message || 'Failed to list ads' });
+  }
 };
 
 const moderateProduct = async (req, res) => {
@@ -80,74 +88,86 @@ const deleteReview = async (req, res) => {
 };
 
 const manageCategory = async (req, res) => {
-  const { action } = req.params;
-  const { name } = req.body;
+  try {
+    const { action } = req.params;
+    const { name } = req.body;
 
-  if (action !== 'delete' && !name) {
-    return res.status(400).json({ error: 'Category name is required' });
+    if (action !== 'delete' && !name) {
+      return res.status(400).json({ error: 'Category name is required' });
+    }
+
+    let category;
+    if (action === 'create') {
+      category = await Category.create({ name });
+      await audit({ adminId: req.user.id, action: 'create_category', resource: 'category', resourceId: category.id, ipAddress: req.ip, userAgent: req.get('User-Agent') });
+      return res.status(201).json({ category });
+    }
+
+    if (action === 'update') {
+      category = await Category.findByIdAndUpdate(req.params.id, { name }, { new: true });
+      if (!category) return res.status(404).json({ error: 'Category not found' });
+      await audit({ adminId: req.user.id, action: 'update_category', resource: 'category', resourceId: category.id, ipAddress: req.ip, userAgent: req.get('User-Agent') });
+      return res.json({ category });
+    }
+
+    if (action === 'delete') {
+      category = await Category.findById(req.params.id);
+      if (!category) return res.status(404).json({ error: 'Category not found' });
+      await Category.deleteOne({ _id: req.params.id });
+      await audit({ adminId: req.user.id, action: 'delete_category', resource: 'category', resourceId: req.params.id, ipAddress: req.ip, userAgent: req.get('User-Agent') });
+      return res.json({ message: 'Category deleted' });
+    }
+
+    res.status(400).json({ error: 'Invalid category action' });
+  } catch (err) {
+    res.status(500).json({ error: err.message || 'Failed to manage category' });
   }
-
-  let category;
-  if (action === 'create') {
-    category = await Category.create({ name });
-    await audit({ adminId: req.user.id, action: 'create_category', resource: 'category', resourceId: category.id, ipAddress: req.ip, userAgent: req.get('User-Agent') });
-    return res.status(201).json({ category });
-  }
-
-  if (action === 'update') {
-    category = await Category.findByIdAndUpdate(req.params.id, { name }, { new: true });
-    if (!category) return res.status(404).json({ error: 'Category not found' });
-    await audit({ adminId: req.user.id, action: 'update_category', resource: 'category', resourceId: category.id, ipAddress: req.ip, userAgent: req.get('User-Agent') });
-    return res.json({ category });
-  }
-
-  if (action === 'delete') {
-    category = await Category.findById(req.params.id);
-    if (!category) return res.status(404).json({ error: 'Category not found' });
-    await Category.deleteOne({ _id: req.params.id });
-    await audit({ adminId: req.user.id, action: 'delete_category', resource: 'category', resourceId: req.params.id, ipAddress: req.ip, userAgent: req.get('User-Agent') });
-    return res.json({ message: 'Category deleted' });
-  }
-
-  res.status(400).json({ error: 'Invalid category action' });
 };
 
 const manageAds = async (req, res) => {
-  const { action } = req.params;
-  const { title, slot, imageUrl, link } = req.body;
+  try {
+    const { action } = req.params;
+    const { title, slot, imageUrl, link } = req.body;
 
-  if (action !== 'delete' && !title) {
-    return res.status(400).json({ error: 'Ad title is required' });
+    if (action !== 'delete' && !title) {
+      return res.status(400).json({ error: 'Ad title is required' });
+    }
+
+    let ad;
+    if (action === 'create') {
+      ad = await Ad.create({ title, slot, imageUrl, link });
+      await audit({ adminId: req.user.id, action: 'create_ad', resource: 'advertisement', resourceId: ad.id, ipAddress: req.ip, userAgent: req.get('User-Agent') });
+      return res.status(201).json({ ad });
+    }
+
+    if (action === 'update') {
+      ad = await Ad.findByIdAndUpdate(req.params.id, { title, slot, imageUrl, link }, { new: true });
+      if (!ad) return res.status(404).json({ error: 'Ad not found' });
+      await audit({ adminId: req.user.id, action: 'update_ad', resource: 'advertisement', resourceId: ad.id, ipAddress: req.ip, userAgent: req.get('User-Agent') });
+      return res.json({ ad });
+    }
+
+    if (action === 'delete') {
+      ad = await Ad.findById(req.params.id);
+      if (!ad) return res.status(404).json({ error: 'Ad not found' });
+      await Ad.deleteOne({ _id: req.params.id });
+      await audit({ adminId: req.user.id, action: 'delete_ad', resource: 'advertisement', resourceId: req.params.id, ipAddress: req.ip, userAgent: req.get('User-Agent') });
+      return res.json({ message: 'Advertisement deleted' });
+    }
+
+    res.status(400).json({ error: 'Invalid advertisement action' });
+  } catch (err) {
+    res.status(500).json({ error: err.message || 'Failed to manage advertisement' });
   }
-
-  let ad;
-  if (action === 'create') {
-    ad = await Ad.create({ title, slot, imageUrl, link });
-    await audit({ adminId: req.user.id, action: 'create_ad', resource: 'advertisement', resourceId: ad.id, ipAddress: req.ip, userAgent: req.get('User-Agent') });
-    return res.status(201).json({ ad });
-  }
-
-  if (action === 'update') {
-    ad = await Ad.findByIdAndUpdate(req.params.id, { title, slot, imageUrl, link }, { new: true });
-    if (!ad) return res.status(404).json({ error: 'Ad not found' });
-    await audit({ adminId: req.user.id, action: 'update_ad', resource: 'advertisement', resourceId: ad.id, ipAddress: req.ip, userAgent: req.get('User-Agent') });
-    return res.json({ ad });
-  }
-
-  if (action === 'delete') {
-    ad = await Ad.findById(req.params.id);
-    if (!ad) return res.status(404).json({ error: 'Ad not found' });
-    await Ad.deleteOne({ _id: req.params.id });
-    await audit({ adminId: req.user.id, action: 'delete_ad', resource: 'advertisement', resourceId: req.params.id, ipAddress: req.ip, userAgent: req.get('User-Agent') });
-    return res.json({ message: 'Advertisement deleted' });
-  }
-
-  res.status(400).json({ error: 'Invalid advertisement action' });
 };
 
 const platformSettings = async (req, res) => {
-  await audit({ adminId: req.user.id, action: 'update_settings', resource: 'settings', ipAddress: req.ip, userAgent: req.get('User-Agent') });
-  res.json({ message: 'Settings updated' });
+  try {
+    await audit({ adminId: req.user.id, action: 'update_settings', resource: 'settings', ipAddress: req.ip, userAgent: req.get('User-Agent') });
+    res.json({ message: 'Settings updated' });
+  } catch (err) {
+    res.status(500).json({ error: err.message || 'Failed to update settings' });
+  }
 };
 
 module.exports = {
@@ -158,6 +178,8 @@ module.exports = {
   deleteProperty,
   manageUser,
   deleteReview,
+  listCategories,
+  listAds,
   manageCategory,
   manageAds,
   platformSettings,
