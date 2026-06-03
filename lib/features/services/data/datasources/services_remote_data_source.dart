@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:bolt_marketplace/core/constants/api_endpoints.dart';
-import '../entities/service_entities.dart';
+import '../../domain/entities/service_entities.dart';
 
 class ServicesRemoteDataSource {
   final Dio dio;

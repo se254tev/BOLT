@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.example.bolt_marketplace"
-    compileSdk = 36
+    compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -20,7 +20,7 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
-        targetSdk = 36
+        targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
@@ -30,6 +30,20 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
+        }
+    }
+
+    // Fix AAPT2 timeout issues
+    aaptOptions {
+        noCompress += listOf("webp")
+    }
+
+    packagingOptions {
+        resources {
+            excludes += setOf(
+                "META-INF/proguard/androidx-*.pro",
+                "META-INF/androidx.*.version"
+            )
         }
     }
 }

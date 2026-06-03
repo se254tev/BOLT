@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:bolt_marketplace/core/providers.dart';
 import 'package:bolt_marketplace/core/navigation/app_router_controller.dart';
 import 'package:bolt_marketplace/features/auth/presentation/controllers/auth_controller.dart';
 

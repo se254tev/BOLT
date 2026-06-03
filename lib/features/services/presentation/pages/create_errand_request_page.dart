@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:bolt_marketplace/core/themes/app_theme.dart';
 import 'package:bolt_marketplace/shared/widgets/app_button.dart';
 import 'package:bolt_marketplace/shared/widgets/app_input.dart';
-import '../../domain/entities/service_entities.dart';
 import '../providers/service_providers.dart';
 
 class CreateErrandRequestPage extends ConsumerStatefulWidget {
@@ -88,7 +87,7 @@ class _CreateErrandRequestPageState extends ConsumerState<CreateErrandRequestPag
               ),
               const SizedBox(height: 12),
               DropdownButtonFormField<String>(
-                value: _selectedCategory,
+                initialValue: _selectedCategory,
                 decoration: const InputDecoration(labelText: 'Category'),
                 items: const [
                   DropdownMenuItem(value: 'shopping', child: Text('Shopping')),

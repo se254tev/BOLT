@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/storage_service.dart';
 import '../constants/api_endpoints.dart';
@@ -12,7 +12,7 @@ class SocketEvent {
 }
 
 class SocketService {
-  late IO.Socket socket;
+  late io.Socket socket;
   late StreamController<SocketEvent> _eventController;
   final StorageService _storageService = StorageService();
   bool _isConnected = false;
@@ -35,9 +35,9 @@ class SocketService {
         throw Exception('No JWT token found');
       }
 
-      socket = IO.io(
+      socket = io.io(
         ApiEndpoints.baseUrl,
-        IO.OptionBuilder()
+        io.OptionBuilder()
             .setTransports(['websocket'])
             .disableAutoConnect()
             .setAuth({
@@ -211,7 +211,14 @@ final socketEventsProvider = StreamProvider<SocketEvent>((ref) async* {
 
 // Filtered event provider for specific event names
 final socketEventFilterProvider = StreamProvider.family<dynamic, String>((ref, eventName) async* {
-  await for (final event in ref.watch(socketEventsProvider).stream) {
+  final socketService = ref.watch(socketServiceProvider);
+  
+  // Ensure connected
+  if (!socketService.isConnected) {
+    await socketService.connect();
+  }
+
+  await for (final event in socketService.eventStream) {
     if (event.eventName == eventName) {
       yield event.data;
     }

@@ -5,7 +5,7 @@ import 'package:bolt_marketplace/core/themes/app_theme.dart';
 import 'package:bolt_marketplace/shared/widgets/card_widget.dart';
 import 'package:bolt_marketplace/shared/widgets/app_button.dart';
 import '../../domain/entities/service_entities.dart';
-import '../../../core/realtime/socket_service.dart';
+import 'package:bolt_marketplace/core/realtime/socket_service.dart';
 import '../providers/service_providers.dart';
 
 class IncomingRequestsPage extends ConsumerStatefulWidget {
@@ -30,8 +30,6 @@ class _IncomingRequestsPageState extends ConsumerState<IncomingRequestsPage> {
     }
   }
 
-  String _getTypeLabel(String? type) => type == 'ride' ? 'Rides' : 'Errands';
-  
   String _getTypeIcon(ServiceType type) => type == ServiceType.ride ? '🚗' : '🛍️';
 
   @override
@@ -47,19 +45,35 @@ class _IncomingRequestsPageState extends ConsumerState<IncomingRequestsPage> {
         actions: [
           Padding(
             padding: const EdgeInsets.all(16),
-            child: ref.watch(socketConnectedProvider).whenData(
-                  (connected) => Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: connected ? Colors.green : Colors.grey,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      connected ? 'Live' : 'Offline',
-                      style: const TextStyle(color: Colors.white, fontSize: 12),
-                    ),
-                  ),
+            child: ref.watch(socketConnectedProvider).when(
+              data: (connected) => Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: connected ? Colors.green : Colors.grey,
+                  borderRadius: BorderRadius.circular(12),
                 ),
+                child: Text(
+                  connected ? 'Live' : 'Offline',
+                  style: const TextStyle(color: Colors.white, fontSize: 12),
+                ),
+              ),
+              loading: () => const SizedBox(
+                width: 60,
+                height: 32,
+                child: Center(child: SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))),
+              ),
+              error: (_, __) => Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Text(
+                  'Error',
+                  style: TextStyle(color: Colors.white, fontSize: 12),
+                ),
+              ),
+            ),
           ),
         ],
       ),

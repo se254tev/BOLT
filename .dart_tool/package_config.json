@@ -225,9 +225,9 @@
     },
     {
       "name": "flutter_plugin_android_lifecycle",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.34",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.35",
       "packageUri": "lib/",
-      "languageVersion": "3.9"
+      "languageVersion": "3.10"
     },
     {
       "name": "flutter_riverpod",
@@ -321,9 +321,9 @@
     },
     {
       "name": "image_picker_android",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/image_picker_android-0.8.13+17",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/image_picker_android-0.8.13+19",
       "packageUri": "lib/",
-      "languageVersion": "3.9"
+      "languageVersion": "3.12"
     },
     {
       "name": "image_picker_for_web",
@@ -657,9 +657,9 @@
     },
     {
       "name": "url_launcher_android",
-      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_android-6.3.30",
+      "rootUri": "file:///C:/Users/SHARON%20Otunga/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_android-6.3.32",
       "packageUri": "lib/",
-      "languageVersion": "3.10"
+      "languageVersion": "3.12"
     },
     {
       "name": "url_launcher_ios",

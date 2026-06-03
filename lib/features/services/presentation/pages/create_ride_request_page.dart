@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:bolt_marketplace/core/themes/app_theme.dart';
 import 'package:bolt_marketplace/shared/widgets/app_button.dart';
 import 'package:bolt_marketplace/shared/widgets/app_input.dart';
-import '../../domain/entities/service_entities.dart';
 import '../providers/service_providers.dart';
 
 class CreateRideRequestPage extends ConsumerStatefulWidget {

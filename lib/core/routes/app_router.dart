@@ -105,14 +105,13 @@ class AppRouter {
       GoRoute(
         path: '/services/worker/requests',
         builder: (context, state) {
-          final type = state.uri.queryParameters['type'];
+          final type = state.queryParameters['type'];
           return IncomingRequestsPage(type: type);
         },
       ),
       GoRoute(
         path: '/services/worker/requests/:id',
         builder: (context, state) {
-          final id = state.pathParameters['id'] ?? '';
           return IncomingRequestsPage();
         },
       ),

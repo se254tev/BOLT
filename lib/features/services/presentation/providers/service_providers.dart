@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:bolt_marketplace/core/network/dio_client.dart';
-import '../datasources/services_remote_data_source.dart';
-import '../entities/service_entities.dart';
+import '../../data/datasources/services_remote_data_source.dart';
 import '../../domain/entities/service_entities.dart';
 
 // Data source provider
@@ -170,10 +169,10 @@ final selectedBidProvider = StateProvider<ServiceBid?>((ref) => null);
 
 // Refresh requests
 final refreshUserRequestsProvider = FutureProvider.family<void, String>((ref, userId) async {
-  ref.refresh(userServiceRequestsProvider((userId: userId, type: null, status: null)));
+  ref.invalidate(userServiceRequestsProvider);
 });
 
 // Refresh available requests
 final refreshAvailableRequestsProvider = FutureProvider.family<void, String?>((ref, type) async {
-  ref.refresh(workerAvailableRequestsProvider(type));
+  ref.invalidate(workerAvailableRequestsProvider);
 });

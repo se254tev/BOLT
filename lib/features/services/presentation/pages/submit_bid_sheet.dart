@@ -122,7 +122,7 @@ class _SubmitBidSheetState extends ConsumerState<SubmitBidSheet> {
               // Vehicle type (for rides only)
               if (widget.request.type == ServiceType.ride) ...[
                 DropdownButtonFormField<String>(
-                  value: _vehicleType,
+                  initialValue: _vehicleType,
                   decoration: const InputDecoration(labelText: 'Vehicle Type'),
                   items: const [
                     DropdownMenuItem(value: 'economy', child: Text('Economy Car')),
